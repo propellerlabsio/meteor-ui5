@@ -1,0 +1,34 @@
+<mvc:View controllerName="x.controller.App" xmlns:l="sap.ui.layout" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m">
+    <Table id="idPeopleTable" inset="true" items="{
+        			path: 'peopleModel>/',
+        			sorter: {
+        				path: 'Name'
+        			}
+        		}">
+        <headerToolbar>
+            <Toolbar>
+                <Title level="H2" text="People"/>
+            </Toolbar>
+        </headerToolbar>
+        <columns>
+            <Column width="12em">
+                <Text text="Name"/>
+            </Column>
+            <Column demandPopin="true" minScreenWidth="Tablet">
+                <Text text="City"/>
+            </Column>
+            <Column demandPopin="true" hAlign="Right" minScreenWidth="Tablet">
+                <Text text="Age"/>
+            </Column>
+        </columns>
+        <items>
+            <ColumnListItem>
+                <cells>
+                    <Text text="{peopleModel>name}"/>
+                    <Text text="{peopleModel>city}"/>
+                    <Text text="{peopleModel>age}"/>
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
+</mvc:View>
