@@ -3,11 +3,10 @@
  */
 
 
-// Provides the JSON object based model implementation
+// Provides the Meteor Collection based model implementation
 sap.ui.define(['jquery.sap.global', 'sap/ui/model/ClientModel', 'sap/ui/model/Context', 'sap/ui/model/json/JSONListBinding', 'sap/ui/model/json/JSONPropertyBinding'],
 	function(jQuery, ClientModel, Context, JSONListBinding, JSONPropertyBinding) {
 	"use strict";
-
 
 	var MeteorModel = ClientModel.extend("MeteorModel", {
 
@@ -23,9 +22,28 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/ClientModel', 'sap/ui/model/Co
 				}
 			});
 
-			// if (oData && typeof oData == "object") {
-			// 	this.setData(oData);
-			// }
+			var queryHandle = oCursor.observeChanges({
+				added: (id, fields) => {
+					//TODO performance - only update data that has changed
+					this.setData(oCursor.fetch(), true);
+				},
+
+				changed: (id, fields) => {
+					//TODO performance - only update data that has changed
+					this.setData(oCursor.fetch());
+				},
+
+				removed: (id) => {
+					//TODO performance - only update data that has changed
+					this.setData(oCursor.fetch());
+				}
+			});
+
+			// TODO call stop on queryHandle on destroy of meteor model per docs:
+			// "observeChanges returns a live query handle, which is an object with a
+			// stop method. Call stop with no arguments to stop calling the callback functions
+			// and tear down the query. The query will run forever until you call this. "
+
 		}
 
 		// metadata : {
