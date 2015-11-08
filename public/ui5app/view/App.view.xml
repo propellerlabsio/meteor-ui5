@@ -1,13 +1,17 @@
 <mvc:View controllerName="x.controller.App" xmlns:l="sap.ui.layout" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m">
-    <Table id="idPeopleTable" inset="true" items="{
-        			path: 'peopleModel>/',
+    <Panel>
+        <Text id="textInstructions"
+            text="Manipulate records using the javascript console (e.g. using people.insert) or a tool like RoboMongo and see them reactively update here." />
+    </Panel>
+    <Table id="idPeopleMeteorTable" inset="true" items="{
+        			path: 'people>/',
         			sorter: {
         				path: 'Name'
         			}
         		}">
         <headerToolbar>
             <Toolbar>
-                <Title level="H2" text="People"/>
+                <Title level="H2" text="People (MeteorModel)"/>
             </Toolbar>
         </headerToolbar>
         <columns>
@@ -24,9 +28,9 @@
         <items>
             <ColumnListItem>
                 <cells>
-                    <Text text="{peopleModel>name}"/>
-                    <Text text="{peopleModel>city}"/>
-                    <Text text="{peopleModel>age}"/>
+                    <Text text="{people>name}"/>
+                    <Text text="{people>city}"/>
+                    <Text text="{people>age}"/>
                 </cells>
             </ColumnListItem>
         </items>
