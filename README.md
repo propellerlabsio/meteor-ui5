@@ -6,13 +6,13 @@ UI5 controls.
 Currently it does not include the OpenUI5 library itself which has to be bootstrapped
 via a script in HTML in the normal manner.
 
-WARNING: THIS SOFTWARE IS IN A VERY EARLY ALPHA STATE.  PLEASE DO NOT USE IT FOR
-PRODUCTION PURPOSES.
+WARNING: THIS SOFTWARE IS IN A VERY EARLY ALPHA STATE.  PLEASE DO NOT USE IT FOR PRODUCTION PURPOSES.
 
 # Instructions
 1. Clone this repo to the ```packages``` folder in your meteor project.
 2. Add the package with ```meteor add propellerlabsio:meteor-ui5```.
 3. In your OpenUI5 bootstrap script, add meteor-ui5 as a resource root:
+
   ```
   data-sap-ui-resourceroots='{
     ...
@@ -21,6 +21,7 @@ PRODUCTION PURPOSES.
   }
   ```
 4. Reference MeteorModel in any ```sap.ui.define``` as ```meteor-ui5/MeteorModel```.  E.g.:
+
   ```
   sap.ui.define(
     [
@@ -30,7 +31,8 @@ PRODUCTION PURPOSES.
     ],
     function(Controller, MessageToast, MeteorModel) {
   ```
-5. Instantiate a new meteor model by passing it a subscription and a cursor (query).  E.g.:
+5. Instantiate a new meteor model by passing it a Meteor subscription name and a Meteor cursor (query).  E.g.:
+
   ```
   // Build and set Meteor model from meteor subscription and cursor
   var sSubscription = "people";
@@ -44,4 +46,3 @@ PRODUCTION PURPOSES.
 * Two-way binding (update meteor collection from UI5 control changes)
 * Performance-optimizations in Meteor cursor observeChanges - only update, add and remove changed documents.
 * Destroy cursor queryHandle on destroy of UI5 model
-* Create meteor package for extension
