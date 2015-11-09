@@ -21,15 +21,15 @@ PRODUCTION PURPOSES.
   }
   ```
 4. Reference MeteorModel in any ```sap.ui.define``` as ```meteor-ui5/MeteorModel```.  E.g.:
-```
-sap.ui.define(
+  ```
+  sap.ui.define(
     [
         "sap/ui/core/mvc/Controller",
         "sap/m/MessageToast",
         "meteor-ui5/MeteorModel"
     ],
     function(Controller, MessageToast, MeteorModel) {
-```
+  ```
 5. Instantiate a new meteor model by passing it a subscription and a cursor (query).  E.g.:
   ```
   // Build and set Meteor model from meteor subscription and cursor
@@ -38,6 +38,7 @@ sap.ui.define(
   var oPeople = new MeteorModel(sSubscription,oCursor);
   this.getView().setModel(oPeople, "people");
   ```
+
 # TODO
 * Include OpenUI5 itself in package.
 * Two-way binding (update meteor collection from UI5 control changes)
