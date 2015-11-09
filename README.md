@@ -13,13 +13,13 @@ PRODUCTION PURPOSES.
 1. Clone this repo to the ```packages``` folder in your meteor project.
 2. Add the package with ```meteor add propellerlabsio:meteor-ui5```.
 3. In your OpenUI5 bootstrap script, add meteor-ui5 as a resource root:
-```
-data-sap-ui-resourceroots='{
-  ...
-  "meteor-ui5": "/packages/propellerlabsio_meteor-ui5/"
-  ...
-}
-```
+  ```
+  data-sap-ui-resourceroots='{
+    ...
+    "meteor-ui5": "/packages/propellerlabsio_meteor-ui5/"
+    ...
+  }
+  ```
 4. Reference MeteorModel in any ```sap.ui.define``` as ```meteor-ui5/MeteorModel```.  E.g.:
 ```
 sap.ui.define(
@@ -30,7 +30,14 @@ sap.ui.define(
     ],
     function(Controller, MessageToast, MeteorModel) {
 ```
-
+5. Instantiate a new meteor model by passing it a subscription and a cursor (query).  E.g.:
+  ```
+  // Build and set Meteor model from meteor subscription and cursor
+  var sSubscription = "people";
+  var oCursor = people.find();
+  var oPeople = new MeteorModel(sSubscription,oCursor);
+  this.getView().setModel(oPeople, "people");
+  ```
 # TODO
 * Include OpenUI5 itself in package.
 * Two-way binding (update meteor collection from UI5 control changes)
