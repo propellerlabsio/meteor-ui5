@@ -8,7 +8,11 @@ via a script in HTML in the normal manner.
 
 WARNING: THIS SOFTWARE IS IN A VERY EARLY ALPHA STATE.  PLEASE DO NOT USE IT FOR PRODUCTION PURPOSES.
 
-# Instructions
+# Demo app
+Please clone / refer to the Demo app at https://github.com/propellerlabsio/meteor-ui5-demo.git for
+a working example of the features of this package.
+
+# Set up Instructions
 1. Clone this repo to the ```packages``` folder in your meteor project.
 2. Add the package with ```meteor add propellerlabsio:meteor-ui5```.
 3. In your OpenUI5 bootstrap script, add meteor-ui5 as a resource root:
@@ -44,5 +48,6 @@ WARNING: THIS SOFTWARE IS IN A VERY EARLY ALPHA STATE.  PLEASE DO NOT USE IT FOR
 # TODO
 * Include OpenUI5 itself in package.
 * Two-way binding (update meteor collection from UI5 control changes)
+* Handle caching - updates to assets (xml, js) in client app (ie user of package) are currently cached by browser making development a PITA and deployment of new versions problematic.  In the interim, I'm using Cache Killer for development: https://chrome.google.com/webstore/detail/cache-killer/jpfbieopdmepaolggioebjmedmclkbap
 * Performance-optimizations in Meteor cursor observeChanges - only update, add and remove changed documents.
 * Destroy cursor queryHandle on destroy of UI5 model
