@@ -1,7 +1,11 @@
-/*!
- * ${copyright}
- */
 
+ /*!
+  * MeteorModel for OpenUI5 with Meteor
+  * (c) Copyright 2015 PropellorLabs.io
+  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+  * This project includes code adapted from OpenUI5, which is also licensed under
+  * THE Apached license, Version 2.0.
+  */
 
 // Provides the Meteor Collection based model implementation
 sap.ui.define(['jquery.sap.global', 'sap/ui/model/ClientModel', 'sap/ui/model/Context', 'sap/ui/model/json/JSONListBinding', 'sap/ui/model/json/JSONPropertyBinding'],
@@ -10,8 +14,20 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/ClientModel', 'sap/ui/model/Co
 
 	var MeteorModel = ClientModel.extend("MeteorModel", {
 
-		constructor : function(sSubscription, oCursor) {
+		/**
+		 * Constructor for MeteorModel.
+		 * @param  {String} sSubscription Subscription name
+		 * @param  {Object} oCursor       Meteor cursor (query) reference.
+		 * @param  {Object} oCollection   Meteor collection reference.  Required
+		 *                                for two-way binding.  One-way binding
+		 *                                is used if not provided.
+		 */
+		constructor : function(sSubscription, oCursor, oCollection) {
 			ClientModel.apply(this, arguments);
+
+			this.sSubscription = sSubscription;
+			this.oCursor = oCursor;
+			this.oCollection = oCollection;
 
 			Meteor.subscribe(sSubscription, {
 				onReady: () => {
@@ -44,11 +60,11 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/ClientModel', 'sap/ui/model/Co
 			// stop method. Call stop with no arguments to stop calling the callback functions
 			// and tear down the query. The query will run forever until you call this. "
 
-		}
+		},
 
-		// metadata : {
-		// 	publicMethods : ["setJSON", "getJSON"]
-		// }
+		metadata : {
+		 	publicMethods : ["getJSON"]
+		}
 
 	});
 
@@ -98,7 +114,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/ClientModel', 'sap/ui/model/Co
 	 * @public
 	 */
 	MeteorModel.prototype.getJSON = function(){
-		// return JSON.stringify(this.oData);
+		return JSON.stringify(this.oData);
 	};
 
 	/**
@@ -191,8 +207,8 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/ClientModel', 'sap/ui/model/Co
 	 *
 	 */
 	MeteorModel.prototype.bindTree = function(sPath, oContext, aFilters, mParameters) {
-		// var oBinding = new JSONTreeBinding(this, sPath, oContext, aFilters, mParameters);
-		// return oBinding;
+		var oBinding = new JSONTreeBinding(this, sPath, oContext, aFilters, mParameters);
+		return oBinding;
 	};
 
 	/**
@@ -207,32 +223,74 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/ClientModel', 'sap/ui/model/Co
 	 * @public
 	 */
 	MeteorModel.prototype.setProperty = function(sPath, oValue, oContext, bAsyncUpdate) {
-		// var sResolvedPath = this.resolve(sPath, oContext),
-		// 	iLastSlash, sObjectPath, sProperty;
-		//
-		// // return if path / context is invalid
-		// if (!sResolvedPath) {
-		// 	return false;
-		// }
-		//
-		// // If data is set on root, call setData instead
-		// if (sResolvedPath == "/") {
-		// 	this.setData(oValue);
-		// 	return true;
-		// }
-		//
-		// iLastSlash = sResolvedPath.lastIndexOf("/");
-		// // In case there is only one slash at the beginning, sObjectPath must contain this slash
-		// sObjectPath = sResolvedPath.substring(0, iLastSlash || 1);
-		// sProperty = sResolvedPath.substr(iLastSlash + 1);
-		//
-		// var oObject = this._getObject(sObjectPath);
-		// if (oObject) {
-		// 	oObject[sProperty] = oValue;
-		// 	this.checkUpdate(false, bAsyncUpdate);
-		// 	return true;
-		// }
-		// return false;
+		var sResolvedPath = this.resolve(sPath, oContext),
+			iLastSlash, sObjectPath, sProperty;
+
+		// return if path / context is invalid
+		if (!sResolvedPath) {
+			return false;
+		}
+
+		// If data is set on root, call setData instead
+		if (sResolvedPath == "/") {
+			this.setData(oValue);
+			return true;
+		}
+
+		iLastSlash = sResolvedPath.lastIndexOf("/");
+		// In case there is only one slash at the beginning, sObjectPath must contain this slash
+		sObjectPath = sResolvedPath.substring(0, iLastSlash || 1);
+		sProperty = sResolvedPath.substr(iLastSlash + 1);
+
+		var oObject = this._getObject(sObjectPath);
+		if (oObject) {
+			oObject[sProperty] = oValue;
+
+			// If a collection was passed in constructor, two-way binding is active
+			// so attempt to update meteor collection
+			if (this.oCollection){
+				if (oObject._id){
+					// Update existing record
+					var oModifier = {};
+					oModifier[sPath] = oValue;
+					this.oCollection.update(
+						oObject._id,
+						{$set: oModifier},
+						false,
+						function (error, numDocs){
+							if (error){
+								// TODO Raise exception
+								console.log(
+									"Error updating meteor collection: " +
+									error
+								);
+							}
+						}
+					);
+				} else {
+					// Insert new record
+					this.oCollection.insert(
+						oObject,
+						function (error, numDocs){
+							if (error){
+								// TODO Raise exception
+								console.log(
+									"Error updating meteor collection: " +
+									error
+								);
+							}
+						}
+					);
+				}
+				return true;
+			} else {
+				//TODO raise exception
+				console.log("Cannot update Meteor collection.  No collection provided.");
+				return false;
+			}
+
+		}
+		return false;
 	};
 
 	/**
