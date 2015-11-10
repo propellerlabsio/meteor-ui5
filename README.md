@@ -8,7 +8,10 @@ Currently it does not include the OpenUI5 library itself which has to be bootstr
 WARNING: THIS SOFTWARE IN AN EARLY ALPHA STATE.
 
 ## Demo app
-Please refer to the Demo app at https://github.com/propellerlabsio/meteor-ui5-demo.git for a working example of the features of this package.
+Please see the [Online Demo at Meteor.com](http://meteor-ui5.meteor.com) for a working example of the features of this package.  The code is hosted on [Github](https://github.com/propellerlabsio/meteor-ui5-demo.git).
+
+*Please note that the Meteor.com hosting of the app and SAP CDN hosting of the
+OpenUI5 library may give a false impression of poor performance.  Particularly when loading for the first time.*
 
 ## Useage instructions
 1. Add the package to your meteor project with ```meteor add propellerlabsio:meteor-ui5```.
