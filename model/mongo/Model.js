@@ -2,6 +2,13 @@
  * ${copyright}
  */
 
+// import lodash from 'lodash';
+// console.log(Meteor.require);
+// console.log(Meteor.Npm);
+// console.log(Npm);
+
+// require('node_modules/lodash');
+
 // Provides the base implementation for all model implementations
 sap.ui.define([
   'jquery.sap.global',
@@ -25,8 +32,6 @@ sap.ui.define([
   FilterOperator) {
   "use strict";
 
-  jQuery.sap.require("meteor-ui5.lib.lodash");
-
   /**
    * The SAPUI5 Data Binding API.
    *
@@ -44,9 +49,9 @@ sap.ui.define([
    */
 
   /**
-   * Constructor for a new MeteorMongoModel.
+   * Constructor for a new Model.
    *
-   * Every MeteorMongoModel is a MessageProcessor that is able to handle Messages with the normal binding path syntax in the target.
+   * Every Model is a MessageProcessor that is able to handle Messages with the normal binding path syntax in the target.
    *
    * @class
    * This is an abstract base class for model objects.
@@ -59,9 +64,9 @@ sap.ui.define([
    *
    * @constructor
    * @public
-   * @alias meteor-ui5.model.mongo.MeteorMongoModel
+   * @alias meteor-ui5.model.mongo.Model
    */
-  var MeteorMongoModel = Model.extend("meteor-ui5.model.mongo.MeteorMongoModel", /** @lends meteor-ui5.model.mongo.MeteorMongoModel.prototype */ {
+  var cModel = Model.extend("meteor-ui5.model.mongo.Model", /** @lends meteor-ui5.model.mongo.Model.prototype */ {
 
     constructor: function(iSizeLimit) {
       Model.apply(this, arguments);
@@ -87,7 +92,7 @@ sap.ui.define([
   /**
    * Return new PropertyBinding for given parameters
    *
-   * @name meteor-ui5.model.mongo.MeteorMongoModel.prototype.bindProperty
+   * @name meteor-ui5.model.mongo.Model.prototype.bindProperty
    * @function
    * @param {string}
    *         sPath the path pointing to the property that should be bound
@@ -99,7 +104,7 @@ sap.ui.define([
    *
    * @public
    */
-  MeteorMongoModel.prototype.bindProperty = function(sPath, oContext, mParameters) {
+  cModel.prototype.bindProperty = function(sPath, oContext, mParameters) {
     var oBinding = new PropertyBinding(this, sPath, oContext, mParameters);
     return oBinding;
   }
@@ -108,7 +113,7 @@ sap.ui.define([
   /**
    * Return new DocumentListBinding for given parameters
    *
-   * @name meteor-ui5.model.mongo.MeteorMongoModel.prototype.bindList
+   * @name meteor-ui5.model.mongo.Model.prototype.bindList
    * @function
    * @param {string}
    *         sPath the path pointing to the list / array that should be bound
@@ -124,7 +129,7 @@ sap.ui.define([
 
    * @public
    */
-  MeteorMongoModel.prototype.bindList = function(sPath, oContext, aSorters, aFilters, mParameters) {
+  cModel.prototype.bindList = function(sPath, oContext, aSorters, aFilters, mParameters) {
     var oBinding;
     if (oContext) {
       // Binding list to array property in single document
@@ -140,7 +145,7 @@ sap.ui.define([
    * Implement in inheriting classes
    * @abstract
    *
-   * @name meteor-ui5.model.mongo.MeteorMongoModel.prototype.bindTree
+   * @name meteor-ui5.model.mongo.Model.prototype.bindTree
    * @function
    * @param {string}
    *         sPath the path pointing to the tree / array that should be bound
@@ -162,7 +167,7 @@ sap.ui.define([
   /**
    * Create binding context. (Implementation copied from ClientModel.js)
    *
-   * @name meteor-ui5.model.mongo.MeteorMongoModel.prototype.createBindingContext
+   * @name meteor-ui5.model.mongo.Model.prototype.createBindingContext
    * @function
    * @param {string}
    *         sPath the path to create the new context from
@@ -179,7 +184,7 @@ sap.ui.define([
    *
    * @public
    */
-  MeteorMongoModel.prototype.createBindingContext = function(sPath, oContext, mParameters, fnCallBack) {
+  cModel.prototype.createBindingContext = function(sPath, oContext, mParameters, fnCallBack) {
     // optional parameter handling
     if (typeof oContext == "function") {
       fnCallBack = oContext;
@@ -205,7 +210,7 @@ sap.ui.define([
    * Implement in inheriting classes
    * @abstract
    *
-   * @name meteor-ui5.model.mongo.MeteorMongoModel.prototype.destroyBindingContext
+   * @name meteor-ui5.model.mongo.Model.prototype.destroyBindingContext
    * @function
    * @param {object}
    *         oContext to destroy
@@ -215,10 +220,35 @@ sap.ui.define([
   //TODO implement this
 
   /**
+   * Alternative to lodash _.get so we don't have to include whole library
+   *
+   * Code taken from: https://gist.github.com/jeneg/9767afdcca45601ea44930ea03e0febf
+   * TODO: test that this works in all likely instances
+   * @param  {[type]} obj [description]
+   * @param  {[type]} path   [description]
+   * @param  {[type]} def    [description]
+   * @return {[type]}        [description]
+   */
+  cModel.prototype._get = function(obj, path, def) {
+    var fullPath = path
+      .replace(/\[/g, '.')
+      .replace(/]/g, '')
+      .split('.')
+      .filter(Boolean);
+
+    return fullPath.every(everyFunc) ? obj : def;
+
+    function everyFunc(step) {
+      return !(step && (obj = obj[step]) === undefined);
+    }
+  };
+
+
+  /**
    * Implement in inheriting classes
    * @abstract
    *
-   * @name meteor-ui5.model.mongo.MeteorMongoModel.prototype.getProperty
+   * @name meteor-ui5.model.mongo.Model.prototype.getProperty
    * @function
    * @param {string}
    *         sPath the path to where to read the attribute value
@@ -226,7 +256,7 @@ sap.ui.define([
    *		   [oContext=null] the context with which the path should be resolved
    * @public
    */
-  MeteorMongoModel.prototype.getProperty = function(sPath, oContext) {
+  cModel.prototype.getProperty = function(sPath, oContext) {
     let propertyValue;
 
     // Check we have a context or we can't return a property - not yet sure
@@ -249,7 +279,7 @@ sap.ui.define([
           propertyValue = this._getLookupProperty(document, oComponents.propertyPath);
         } else {
           // Regular property - get from current document
-          propertyValue = _.get(document, oComponents.propertyPath);
+          propertyValue = this._get(document, oComponents.propertyPath);
         }
       } else {
         // Return document (e.g. called by getObject)
@@ -260,7 +290,7 @@ sap.ui.define([
     return propertyValue;
   }
 
-  MeteorMongoModel.prototype._getLookupProperty = function(oCurrentDocument, sLookupPath) {
+  cModel.prototype._getLookupProperty = function(oCurrentDocument, sLookupPath) {
     // This is a lookup query, e.g.: "?Customers(CustomerID)/CompanyName"
     // Create context and path to lookup property in another collection
 
@@ -296,12 +326,12 @@ sap.ui.define([
    *		   [oContext=null] the context with which the path should be resolved
    * @public
    */
-  MeteorMongoModel.prototype.getObject = function(sPath, oContext) {
+  cModel.prototype.getObject = function(sPath, oContext) {
     return this.getProperty(sPath, oContext);
   };
 
   /* Resolve and return all components from path */
-  MeteorMongoModel.prototype._getPathComponents = function(sPath, oContext) {
+  cModel.prototype._getPathComponents = function(sPath, oContext) {
 
     // Define object this method returns.  Some or all properties will be
     // set in this method.
@@ -359,16 +389,16 @@ sap.ui.define([
     // Return remaining components as property path
     aComponents.shift();
     var sPropertyPath = aComponents.join('.');
-    if (sPropertyPath){
+    if (sPropertyPath) {
       var iCloseParens = sPropertyPath.indexOf(")");
-      if (iCloseParens > -1){
+      if (iCloseParens > -1) {
         // Replace period directly after closing parenthesis with "/"
         // TODO fix this hack - don't quite understand yet why this is necessary
         // but seems to be for lookups.
         var iFirstAfterCloseParens = iCloseParens + 1;
         if (sPropertyPath.charAt(iFirstAfterCloseParens) === ".") {
-          sPropertyPath = sPropertyPath.substr(0, iFirstAfterCloseParens) + "/"
-            + sPropertyPath.substr(iCloseParens + 1);
+          sPropertyPath = sPropertyPath.substr(0, iFirstAfterCloseParens) + "/" +
+            sPropertyPath.substr(iCloseParens + 1);
         }
       }
     }
@@ -378,7 +408,7 @@ sap.ui.define([
   };
 
   /* Builds and runs mongo collection find and returns meteor cursor */
-  MeteorMongoModel.prototype.runQuery = function(sPath, oContext, aSorters, aFilters) {
+  cModel.prototype.runQuery = function(sPath, oContext, aSorters, aFilters) {
     // Resolve path and get components (collection name, document id)
     var oPathComponents = this._getPathComponents(sPath, oContext);
 
@@ -409,7 +439,7 @@ sap.ui.define([
 
   }
 
-  MeteorMongoModel.prototype._buildMongoSelector = function(aFilters) {
+  cModel.prototype._buildMongoSelector = function(aFilters) {
     let oMongoSelector = {};
     // Build mongo selector incorporating each filter
 
@@ -516,7 +546,7 @@ sap.ui.define([
     return oMongoSelector;
   };
 
-  MeteorMongoModel.prototype._buildMongoSortSpecifier = function(aSorters) {
+  cModel.prototype._buildMongoSortSpecifier = function(aSorters) {
     let oMongoSortSpecifier = {};
     aSorters.forEach((oSorter) => {
       // Don't know what options need to be supported yet but currently
@@ -558,7 +588,7 @@ sap.ui.define([
    * Create ContextBinding
    * @abstract
    *
-   * @name meteor-ui5.model.mongo.MeteorMongoModel.prototype.bindContext
+   * @name meteor-ui5.model.mongo.Model.prototype.bindContext
    * @function
    * @param {string | object}
    *         sPath the path pointing to the property that should be bound or an object
@@ -573,7 +603,7 @@ sap.ui.define([
    *
    * @public
    */
-  MeteorMongoModel.prototype.bindContext = function(sPath, oContext, mParameters) {
+  cModel.prototype.bindContext = function(sPath, oContext, mParameters) {
     var oBinding = new ContextBinding(this, sPath, oContext, mParameters);
     return oBinding;
   };
@@ -589,7 +619,7 @@ sap.ui.define([
    *
    * @param {string} sPath the path
    */
-  MeteorMongoModel.prototype.getContext = function(sPath) {
+  cModel.prototype.getContext = function(sPath) {
     if (!jQuery.sap.startsWith(sPath, "/")) {
       throw new Error("Path " + sPath + " must start with a / ");
     }
@@ -615,7 +645,7 @@ sap.ui.define([
    * @param {sap.ui.core.Context} [oContext] context to resolve a relative path against
    * @return {string} resolved path or undefined
    */
-  MeteorMongoModel.prototype.resolve = function(sPath, oContext) {
+  cModel.prototype.resolve = function(sPath, oContext) {
     var bIsRelative = typeof sPath == "string" && !jQuery.sap.startsWith(sPath, "/"),
       sResolvedPath = sPath,
       sContextPath;
@@ -645,7 +675,7 @@ sap.ui.define([
    * @see sap.ui.base.Object.prototype.destroy
    * @public
    */
-  MeteorMongoModel.prototype.destroy = function() {
+  cModel.prototype.destroy = function() {
     // Call destroy on each binding where method exists
     this.aBindings.forEach(function(oBinding) {
       if (oBinding.hasOwnProperty("destroy")) {
@@ -657,6 +687,6 @@ sap.ui.define([
     Model.prototype.destroy.apply(this, arguments);
   };
 
-  return MeteorMongoModel;
+  return cModel;
 
 });

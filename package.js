@@ -1,3 +1,4 @@
+
 Package.describe({
   name: 'propellerlabsio:meteor-ui5',
   version: '0.1.0',
@@ -18,7 +19,7 @@ Package.onUse(function(api) {
     'model/mongo/PropertyListBinding.js'
   ], 'client', {
     bare: true,
-    isAsset: true
+    isAsset: true     // Allows clients to reference model by <resourcepath>.model.mongo.Model
   });
 
 });
