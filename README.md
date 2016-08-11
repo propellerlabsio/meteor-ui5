@@ -19,14 +19,14 @@ Please see the [Meteor Ui5 website at PropellerLabs.io](http://meteor-ui5.propel
     I.e. `/public/webapp`.
 1. Bootstrap UI5.  
 In your app's HTML file, bootstrap UI5 in the manner [described in the OpenUI5 docs](http://openui5.org/getstarted.html#step1).  In your OpenUI5 bootstrap script, add the public folder you created in the previous step and meteor-ui5 as resource roots.  Do not include the `/public` part of your UI5 app folder path:
-```json
+  ```json
 data-sap-ui-resourceroots='{
   "myui5app": "/webapp/"
   "meteor-ui5": "/packages/propellerlabsio_meteor-ui5/"
 }
-```
+  ```
 1. Instantiate a meteor model for your UI5 views/controls.  You can reference any `meteor-ui5` component in any `sap.ui.define` like this:
-```
+  ```js
 sap.ui.define(
   [
       "sap/ui/core/mvc/Controller",
@@ -34,7 +34,7 @@ sap.ui.define(
       "meteor-ui5/model/mongo/Model"
   ],
   function(Controller, MessageToast, MeteorModel) {
-```
+  ```
 
 1. Access data from your meteor mongo collections. E.g:
   1. Controler code:
