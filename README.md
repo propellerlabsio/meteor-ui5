@@ -18,7 +18,7 @@ Please see the [Meteor Ui5 website at PropellerLabs.io](http://meteor-ui5.propel
 1. Create a folder called `webapp` for your UI5 app in the public folder of the root directory.
     I.e. `/public/webapp`.
 1. Bootstrap UI5.  
-In your app's HTML file, bootstrap UI5 in the manner [described in the OpenUI5 docs](http://openui5.org/getstarted.html#step1).  In your OpenUI5 bootstrap script, add the public folder you created in the previous step and meteor-ui5 as resource roots.  Do not include the `/public` part of your UI5 app folder path:
+Create a single html file in your project's client folder.  In your app's HTML file, bootstrap UI5 in the manner [described in the OpenUI5 docs](http://openui5.org/getstarted.html#step1).  In your OpenUI5 bootstrap script, add the public folder you created in the previous step and meteor-ui5 as resource roots.  Do not include the `/public` part of your UI5 app folder path:
   ```json
 data-sap-ui-resourceroots='{
   "myui5app": "/webapp/"

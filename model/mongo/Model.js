@@ -2,12 +2,10 @@
  * ${copyright}
  */
 
-// import lodash from 'lodash';
-// console.log(Meteor.require);
-// console.log(Meteor.Npm);
-// console.log(Npm);
-
-// require('node_modules/lodash');
+/**
+ * Meteor UI5 Mongo Model
+ * @namespace meteor-ui5.model.mongo
+ */
 
 // Provides the base implementation for all model implementations
 sap.ui.define([
@@ -33,33 +31,15 @@ sap.ui.define([
   "use strict";
 
   /**
-   * The SAPUI5 Data Binding API.
-   *
-   * The default binding mode for model implementations (if not implemented otherwise) is two way and the supported binding modes by the model
-   * are one way, two way and one time. The default binding mode can be changed by the application for each model instance.
-   * A model implementation should specify its supported binding modes and set the default binding mode accordingly
-   * (e.g. if the model supports only one way binding the default binding mode should also be set to one way).
-   *
-   * The default size limit for models is 100. The size limit determines the number of entries used for the list bindings.
-   *
-   *
-   * @namespace
-   * @name sap.ui.model
-   * @public
-   */
-
-  /**
    * Constructor for a new Model.
    *
    * Every Model is a MessageProcessor that is able to handle Messages with the normal binding path syntax in the target.
    *
    * @class
-   * This is an abstract base class for model objects.
-   * @abstract
    *
-   * @extends sap.ui.core.message.MessageProcessor
+   * @extends sap.ui.model.Model
    *
-   * @author SAP SE
+   * @author PropellerLabs.io
    * @version ${version}
    *
    * @constructor
@@ -224,10 +204,10 @@ sap.ui.define([
    *
    * Code taken from: https://gist.github.com/jeneg/9767afdcca45601ea44930ea03e0febf
    * TODO: test that this works in all likely instances
-   * @param  {[type]} obj [description]
-   * @param  {[type]} path   [description]
-   * @param  {[type]} def    [description]
-   * @return {[type]}        [description]
+   * @param  {object} obj The object containing the desired property
+   * @param  {string} path The path to the property
+   * @param  {string|number} def Default value if property not found
+   * @return {string|number} The property value
    */
   cModel.prototype._get = function(obj, path, def) {
     var fullPath = path

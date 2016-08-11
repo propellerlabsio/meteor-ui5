@@ -1,4 +1,9 @@
-
+/**
+ * The Meteor UI5 package
+ *
+ * @namespace meteor-ui5
+ *
+ */
 Package.describe({
   name: 'propellerlabsio:meteor-ui5',
   version: '0.1.0',
