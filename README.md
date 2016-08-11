@@ -38,20 +38,20 @@ sap.ui.define(
 
 1. Access data from your meteor mongo collections. E.g:
   1. Controler code:
-```js
+  ```js
     onInit: function() {
       // Create Meteor model
       var oModel = new MeteorModel();
       this.getView().setModel(oModel);
     },
-```
+  ```
   2. View code:
-```xml
+  ```xml
     <!-- List all orders in mongo collection Orders -->
     <Table id="OrdersTable" items="{/Orders}">
         <!-- Define your columns here -->
     <Table>
-```
+  ```
 
 ## Roadmap
 
