@@ -46,7 +46,7 @@ sap.ui.define([
    * @public
    * @alias meteor-ui5.model.mongo.Model
    */
-  var cModel = Model.extend("meteor-ui5.model.mongo.Model", /** @lends meteor-ui5.model.mongo.Model.prototype */ {
+  var cModel = Model.extend("meteor-ui5.model.mongo.Model",  {
 
     constructor: function(iSizeLimit) {
       Model.apply(this, arguments);
@@ -123,7 +123,6 @@ sap.ui.define([
 
   /**
    * Implement in inheriting classes
-   * @abstract
    *
    * @name meteor-ui5.model.mongo.Model.prototype.bindTree
    * @function
@@ -188,7 +187,6 @@ sap.ui.define([
 
   /**
    * Implement in inheriting classes
-   * @abstract
    *
    * @name meteor-ui5.model.mongo.Model.prototype.destroyBindingContext
    * @function
@@ -226,7 +224,6 @@ sap.ui.define([
 
   /**
    * Implement in inheriting classes
-   * @abstract
    *
    * @name meteor-ui5.model.mongo.Model.prototype.getProperty
    * @function
@@ -298,7 +295,6 @@ sap.ui.define([
 
   /**
    * Implement in inheriting classes
-   * @abstract
    *
    * @param {string}
    *         sPath the path to where to read the object
@@ -566,7 +562,6 @@ sap.ui.define([
 
   /**
    * Create ContextBinding
-   * @abstract
    *
    * @name meteor-ui5.model.mongo.Model.prototype.bindContext
    * @function
