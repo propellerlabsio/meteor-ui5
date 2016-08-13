@@ -33,20 +33,20 @@ Package.onUse(function(api) {
   // isAsset options.
   api.addFiles([
     'model/mongo/ContextBinding.js',
-    'model/mongo/ContextBinding.js.map',
     'model/mongo/ContextBinding-dbg.js',
+    'model/mongo/ContextBinding.js.map',
     'model/mongo/DocumentListBinding.js',
-    'model/mongo/DocumentListBinding.js.map',
     'model/mongo/DocumentListBinding-dbg.js',
+    'model/mongo/DocumentListBinding.js.map',
     'model/mongo/Model.js',
-    'model/mongo/Model.js.map',
     'model/mongo/Model-dbg.js',
+    'model/mongo/Model.js.map',
     'model/mongo/PropertyBinding.js',
-    'model/mongo/PropertyBinding.js.map',
     'model/mongo/PropertyBinding-dbg.js',
+    'model/mongo/PropertyBinding.js.map',
     'model/mongo/PropertyListBinding.js',
-    'model/mongo/PropertyListBinding.js.map',
-    'model/mongo/PropertyListBinding-dbg.js'
+    'model/mongo/PropertyListBinding-dbg.js',
+    'model/mongo/PropertyListBinding.js.map'
   ], 'client', {
     bare: true,
     isAsset: true // Allows clients to reference model by <resourcepath>.model.mongo.Model

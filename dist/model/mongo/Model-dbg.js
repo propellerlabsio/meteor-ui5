@@ -1,3 +1,5 @@
+'use strict';
+
 /*!
  * ${copyright}
  */
@@ -8,26 +10,7 @@
  */
 
 // Provides the base implementation for all model implementations
-sap.ui.define([
-  'jquery.sap.global',
-  'sap/ui/model/Model',
-  'sap/ui/model/BindingMode',
-  'sap/ui/model/Context',
-  './DocumentListBinding',
-  './PropertyListBinding',
-  './PropertyBinding',
-  './ContextBinding',
-  'sap/ui/model/FilterOperator',
-], function(
-  jQuery,
-  Model,
-  BindingMode,
-  Context,
-  DocumentListBinding,
-  PropertyListBinding,
-  PropertyBinding,
-  ContextBinding,
-  FilterOperator) {
+sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', 'sap/ui/model/BindingMode', 'sap/ui/model/Context', './DocumentListBinding', './PropertyListBinding', './PropertyBinding', './ContextBinding', 'sap/ui/model/FilterOperator'], function (jQuery, Model, BindingMode, Context, DocumentListBinding, PropertyListBinding, PropertyBinding, ContextBinding, FilterOperator) {
   "use strict";
 
   /**
@@ -46,9 +29,10 @@ sap.ui.define([
    * @public
    * @alias meteor-ui5.model.mongo.Model
    */
-  var cModel = Model.extend("meteor-ui5.model.mongo.Model",  {
 
-    constructor: function(iSizeLimit) {
+  var cModel = Model.extend("meteor-ui5.model.mongo.Model", {
+
+    constructor: function constructor(iSizeLimit) {
       Model.apply(this, arguments);
 
       this.oData = {};
@@ -64,10 +48,9 @@ sap.ui.define([
       };
       this.bLegacySyntax = false;
       this.sUpdateTimer = null;
-    },
+    }
 
   });
-
 
   /**
    * Return new PropertyBinding for given parameters
@@ -84,11 +67,10 @@ sap.ui.define([
    *
    * @public
    */
-  cModel.prototype.bindProperty = function(sPath, oContext, mParameters) {
+  cModel.prototype.bindProperty = function (sPath, oContext, mParameters) {
     var oBinding = new PropertyBinding(this, sPath, oContext, mParameters);
     return oBinding;
-  }
-
+  };
 
   /**
    * Return new DocumentListBinding for given parameters
@@ -106,10 +88,9 @@ sap.ui.define([
    * @param {object}
    *         [mParameters=null] additional model specific parameters (optional)
    * @return {sap.ui.model.ListBinding}
-
-   * @public
+    * @public
    */
-  cModel.prototype.bindList = function(sPath, oContext, aSorters, aFilters, mParameters) {
+  cModel.prototype.bindList = function (sPath, oContext, aSorters, aFilters, mParameters) {
     var oBinding;
     if (oContext) {
       // Binding list to array property in single document
@@ -119,7 +100,7 @@ sap.ui.define([
       oBinding = new DocumentListBinding(this, sPath, oContext, aSorters, aFilters, mParameters);
     }
     return oBinding;
-  }
+  };
 
   /**
    * Implement in inheriting classes
@@ -137,8 +118,7 @@ sap.ui.define([
    * @param {array}
    *         [aSorters=null] predefined sap.ui.model.sorter/s contained in an array (optional)
    * @return {sap.ui.model.TreeBinding}
-
-   * @public
+    * @public
    */
   // TODO implement this.  Check first if controls that use this haven't all been
   // deprecated.
@@ -163,7 +143,7 @@ sap.ui.define([
    *
    * @public
    */
-  cModel.prototype.createBindingContext = function(sPath, oContext, mParameters, fnCallBack) {
+  cModel.prototype.createBindingContext = function (sPath, oContext, mParameters, fnCallBack) {
     // optional parameter handling
     if (typeof oContext == "function") {
       fnCallBack = oContext;
@@ -175,7 +155,7 @@ sap.ui.define([
     }
     // resolve path and create context
     var sContextPath = this.resolve(sPath, oContext),
-      oNewContext = (sContextPath == undefined) ? undefined : this.getContext(sContextPath ? sContextPath : "/");
+        oNewContext = sContextPath == undefined ? undefined : this.getContext(sContextPath ? sContextPath : "/");
     if (!oNewContext) {
       oNewContext = null;
     }
@@ -192,8 +172,7 @@ sap.ui.define([
    * @function
    * @param {object}
    *         oContext to destroy
-
-   * @public
+    * @public
    */
   //TODO implement this
 
@@ -207,12 +186,8 @@ sap.ui.define([
    * @param  {string|number} def Default value if property not found
    * @return {string|number} The property value
    */
-  cModel.prototype._get = function(obj, path, def) {
-    var fullPath = path
-      .replace(/\[/g, '.')
-      .replace(/]/g, '')
-      .split('.')
-      .filter(Boolean);
+  cModel.prototype._get = function (obj, path, def) {
+    var fullPath = path.replace(/\[/g, '.').replace(/]/g, '').split('.').filter(Boolean);
 
     return fullPath.every(everyFunc) ? obj : def;
 
@@ -220,7 +195,6 @@ sap.ui.define([
       return !(step && (obj = obj[step]) === undefined);
     }
   };
-
 
   /**
    * Implement in inheriting classes
@@ -233,8 +207,8 @@ sap.ui.define([
    *		   [oContext=null] the context with which the path should be resolved
    * @public
    */
-  cModel.prototype.getProperty = function(sPath, oContext) {
-    let propertyValue;
+  cModel.prototype.getProperty = function (sPath, oContext) {
+    var propertyValue = void 0;
 
     // Check we have a context or we can't return a property - not yet sure
     // why this is sometimes being called when context hasn't been set yet
@@ -265,9 +239,9 @@ sap.ui.define([
     }
 
     return propertyValue;
-  }
+  };
 
-  cModel.prototype._getLookupProperty = function(oCurrentDocument, sLookupPath) {
+  cModel.prototype._getLookupProperty = function (oCurrentDocument, sLookupPath) {
     // This is a lookup query, e.g.: "?Customers(CustomerID)/CompanyName"
     // Create context and path to lookup property in another collection
 
@@ -275,23 +249,15 @@ sap.ui.define([
     // components.documentId actually contains property name in
     // current document
     var oLookupComponents = this._getPathComponents(sLookupPath);
-    const sLookupContextPath =
-      "/" +
-      oLookupComponents.collectionName +
-      "(" +
-      oCurrentDocument[oLookupComponents.documentId] +
-      ")";
+    var sLookupContextPath = "/" + oLookupComponents.collectionName + "(" + oCurrentDocument[oLookupComponents.documentId] + ")";
 
     // Get context for querying lookup collection if it already exists
     // or create one
-    const oLookupContext = this.getContext(sLookupContextPath);
+    var oLookupContext = this.getContext(sLookupContextPath);
 
     // Call standard getProperty with new context and path property
-    return this.getProperty(
-      oLookupComponents.propertyPath,
-      oLookupContext
-    );
-  }
+    return this.getProperty(oLookupComponents.propertyPath, oLookupContext);
+  };
 
   /**
    * Implement in inheriting classes
@@ -302,35 +268,35 @@ sap.ui.define([
    *		   [oContext=null] the context with which the path should be resolved
    * @public
    */
-  cModel.prototype.getObject = function(sPath, oContext) {
+  cModel.prototype.getObject = function (sPath, oContext) {
     return this.getProperty(sPath, oContext);
   };
 
   /* Resolve and return all components from path */
-  cModel.prototype._getPathComponents = function(sPath, oContext) {
+  cModel.prototype._getPathComponents = function (sPath, oContext) {
 
     // Define object this method returns.  Some or all properties will be
     // set in this method.
-    let oComponents = {
+    var oComponents = {
       collectionName: "",
       documentId: "",
-      propertyPath: "",
+      propertyPath: ""
     };
 
     // Resolve path from oContext and sPath into one full path
-    let sFullPath = oContext ? this.resolve(sPath, oContext) : sPath;
+    var sFullPath = oContext ? this.resolve(sPath, oContext) : sPath;
 
     // Validate path
-    const sFirstChar = sFullPath.charAt(0);
+    var sFirstChar = sFullPath.charAt(0);
     if (sFirstChar === "?") {
       // Question mark denotes Meteor Mongo model Lookup binding path
       // Convert it to a regular root (non-relative path)
       sFullPath = "/" + sFullPath.slice(1);
     } else if (sFirstChar !== "/") {
-      const sError = "Cannot find root element (Mongo Collection).";
-      jQuery.sap.log.fatal(sError);
+      var _sError = "Cannot find root element (Mongo Collection).";
+      jQuery.sap.log.fatal(_sError);
       this.fireParseError({
-        srcText: sError
+        srcText: _sError
       });
     }
 
@@ -350,14 +316,14 @@ sap.ui.define([
     }
 
     // Interpret first componet - Collection name - possibly with document id
-    const sCollectionComponent = aComponents[0];
-    const openParens = sCollectionComponent.indexOf("(");
+    var sCollectionComponent = aComponents[0];
+    var openParens = sCollectionComponent.indexOf("(");
     if (openParens < 0) {
       // No document id - whole component is collection name
       oComponents.collectionName = sCollectionComponent;
     } else {
       // Get collection name and document id
-      const closeParens = sCollectionComponent.indexOf(")");
+      var closeParens = sCollectionComponent.indexOf(")");
       oComponents.collectionName = sCollectionComponent.substring(0, openParens);
       oComponents.documentId = sCollectionComponent.substring(openParens + 1, closeParens);
     }
@@ -373,8 +339,7 @@ sap.ui.define([
         // but seems to be for lookups.
         var iFirstAfterCloseParens = iCloseParens + 1;
         if (sPropertyPath.charAt(iFirstAfterCloseParens) === ".") {
-          sPropertyPath = sPropertyPath.substr(0, iFirstAfterCloseParens) + "/" +
-            sPropertyPath.substr(iCloseParens + 1);
+          sPropertyPath = sPropertyPath.substr(0, iFirstAfterCloseParens) + "/" + sPropertyPath.substr(iCloseParens + 1);
         }
       }
     }
@@ -384,7 +349,7 @@ sap.ui.define([
   };
 
   /* Builds and runs mongo collection find and returns meteor cursor */
-  cModel.prototype.runQuery = function(sPath, oContext, aSorters, aFilters) {
+  cModel.prototype.runQuery = function (sPath, oContext, aSorters, aFilters) {
     // Resolve path and get components (collection name, document id)
     var oPathComponents = this._getPathComponents(sPath, oContext);
 
@@ -392,7 +357,7 @@ sap.ui.define([
     var oCollection = Mongo.Collection.get(oPathComponents.collectionName);
 
     // Build mongo selector
-    let selector = {};
+    var selector = {};
     if (oPathComponents.documentId) {
       selector._id = oPathComponents.documentId;
     } else if (aFilters && aFilters.length) {
@@ -400,7 +365,7 @@ sap.ui.define([
     }
 
     // Build query options
-    let options = {
+    var options = {
       limit: this.iSizeLimit
     };
 
@@ -410,24 +375,25 @@ sap.ui.define([
     }
 
     // Execute query and return cursor
-    const oCursor = oCollection.find(selector, options);
+    var oCursor = oCollection.find(selector, options);
     return oCursor;
+  };
 
-  }
+  cModel.prototype._buildMongoSelector = function (aFilters) {
+    var _this = this;
 
-  cModel.prototype._buildMongoSelector = function(aFilters) {
-    let oMongoSelector = {};
+    var oMongoSelector = {};
     // Build mongo selector incorporating each filter
 
     // Build set of properties with an array of filters for each.  These will
     // will be combined with and/or conditions into the mongo selector later
-    const properties = new Map();
-    aFilters.forEach((oFilter) => {
+    var properties = new Map();
+    aFilters.forEach(function (oFilter) {
       // Validate: We don't currently support multi-filter
       if (oFilter._bMultiFilter) {
-        const sError = "MultiFilter not yet supported by ListBinding.";
+        var sError = "MultiFilter not yet supported by ListBinding.";
         jQuery.sap.log.fatal(sError);
-        this.oModel.fireParseError({
+        _this.oModel.fireParseError({
           srcText: sError
         });
         return;
@@ -436,7 +402,7 @@ sap.ui.define([
       // Build mongo expression according to UI5 filter operator
       // Example filter object:
       // {sPath: "Country", sOperator: "EQ", oValue1: "USA", oValue2: undefined, _bMultiFilter: false}
-      let oMongoExpression = {};
+      var oMongoExpression = {};
       switch (oFilter.sOperator) {
         case FilterOperator.BT:
           oMongoExpression["$gte"] = oFilter.oValue1;
@@ -481,36 +447,36 @@ sap.ui.define([
           oMongoExpression["$ne"] = oFilter.oValue1;
           break;
         default:
-          const sError = "Filter operator " + oFilter.sOperator + " not supported.";
-          jQuery.sap.log.fatal(sError);
-          this.oModel.fireParseError({
-            srcText: sError
+          var _sError2 = "Filter operator " + oFilter.sOperator + " not supported.";
+          jQuery.sap.log.fatal(_sError2);
+          _this.oModel.fireParseError({
+            srcText: _sError2
           });
           return;
       }
 
       // Add current property to the map if it doesn't already exist
-      const propertyName = oFilter.sPath;
+      var propertyName = oFilter.sPath;
       if (!properties.has(propertyName)) {
         properties.set(propertyName, []);
       }
 
       // Add current property selector to map
-      const propertySelector = {};
+      var propertySelector = {};
       propertySelector[propertyName] = oMongoExpression;
       properties.get(propertyName).push(propertySelector);
     });
 
     // Combine propery selectors for different properties using mongo $and
-    const $and = [];
-    properties.forEach(function(expressions) {
+    var $and = [];
+    properties.forEach(function (expressions) {
       // Combine expressions for single property using mongo $or (if multiple)
       if (expressions.length === 1) {
         $and.push(expressions[0]);
       } else {
         $and.push({
           $or: expressions
-        })
+        });
       }
     });
 
@@ -522,19 +488,21 @@ sap.ui.define([
     return oMongoSelector;
   };
 
-  cModel.prototype._buildMongoSortSpecifier = function(aSorters) {
-    let oMongoSortSpecifier = {};
-    aSorters.forEach((oSorter) => {
+  cModel.prototype._buildMongoSortSpecifier = function (aSorters) {
+    var _this2 = this;
+
+    var oMongoSortSpecifier = {};
+    aSorters.forEach(function (oSorter) {
       // Don't know what options need to be supported yet but currently
       // we only support sorting based on a simple property with ascending or
       // descending option.  Validate that this sorter seems to meet that
       // criteria.
-      const bHasSlash = (oSorter.sPath.indexOf("/") > -1);
-      const bHasPeriod = (oSorter.sPath.indexOf(".") > -1);
+      var bHasSlash = oSorter.sPath.indexOf("/") > -1;
+      var bHasPeriod = oSorter.sPath.indexOf(".") > -1;
       if (bHasSlash || bHasPeriod) {
-        const sError = "Currently unsupported list sorting path: " + oSorter.sPath;
+        var sError = "Currently unsupported list sorting path: " + oSorter.sPath;
         jQuery.sap.log.fatal(sError);
-        this.oModel.fireParseError({
+        _this2.oModel.fireParseError({
           srcText: sError
         });
         return;
@@ -544,10 +512,10 @@ sap.ui.define([
       // with Mongo read - may be able to add it later as post query javascript
       // filtering)
       if (oSorter.fnCompare) {
-        const sError = "Custom sort comparator functions currently unsupported";
-        jQuery.sap.log.fatal(sError);
-        this.oModel.fireParseError({
-          srcText: sError
+        var _sError3 = "Custom sort comparator functions currently unsupported";
+        jQuery.sap.log.fatal(_sError3);
+        _this2.oModel.fireParseError({
+          srcText: _sError3
         });
         return;
       }
@@ -558,7 +526,6 @@ sap.ui.define([
 
     return oMongoSortSpecifier;
   };
-
 
   /**
    * Create ContextBinding
@@ -578,7 +545,7 @@ sap.ui.define([
    *
    * @public
    */
-  cModel.prototype.bindContext = function(sPath, oContext, mParameters) {
+  cModel.prototype.bindContext = function (sPath, oContext, mParameters) {
     var oBinding = new ContextBinding(this, sPath, oContext, mParameters);
     return oBinding;
   };
@@ -594,7 +561,7 @@ sap.ui.define([
    *
    * @param {string} sPath the path
    */
-  cModel.prototype.getContext = function(sPath) {
+  cModel.prototype.getContext = function (sPath) {
     if (!jQuery.sap.startsWith(sPath, "/")) {
       throw new Error("Path " + sPath + " must start with a / ");
     }
@@ -620,10 +587,10 @@ sap.ui.define([
    * @param {sap.ui.core.Context} [oContext] context to resolve a relative path against
    * @return {string} resolved path or undefined
    */
-  cModel.prototype.resolve = function(sPath, oContext) {
+  cModel.prototype.resolve = function (sPath, oContext) {
     var bIsRelative = typeof sPath == "string" && !jQuery.sap.startsWith(sPath, "/"),
-      sResolvedPath = sPath,
-      sContextPath;
+        sResolvedPath = sPath,
+        sContextPath;
     if (bIsRelative) {
       if (oContext) {
         sContextPath = oContext.getPath();
@@ -650,9 +617,9 @@ sap.ui.define([
    * @see sap.ui.base.Object.prototype.destroy
    * @public
    */
-  cModel.prototype.destroy = function() {
+  cModel.prototype.destroy = function () {
     // Call destroy on each binding where method exists
-    this.aBindings.forEach(function(oBinding) {
+    this.aBindings.forEach(function (oBinding) {
       if (oBinding.hasOwnProperty("destroy")) {
         oBinding.destroy();
       }
@@ -663,5 +630,5 @@ sap.ui.define([
   };
 
   return cModel;
-
 });
+//# sourceMappingURL=Model.js.map

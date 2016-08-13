@@ -1,17 +1,12 @@
+'use strict';
+
 /*!
 
  * ${copyright}
  */
 
-
 // Provides an abstraction for list bindings
-sap.ui.define([
-  'jquery.sap.global',
-  'sap/ui/model/ListBinding',
-  'sap/ui/model/Context',
-  'sap/ui/model/ChangeReason',
-  'sap/ui/model/Filter'
-], function(jQuery, ListBinding, Context, ChangeReason, Filter) {
+sap.ui.define(['jquery.sap.global', 'sap/ui/model/ListBinding', 'sap/ui/model/Context', 'sap/ui/model/ChangeReason', 'sap/ui/model/Filter'], function (jQuery, ListBinding, Context, ChangeReason, Filter) {
   "use strict";
 
   /**
@@ -32,9 +27,10 @@ sap.ui.define([
    * @alias meteor-ui5.model.mongo.DocumentListBinding
    * @extends sap.ui.model.Binding
    */
+
   var cDocumentListBinding = ListBinding.extend("meteor-ui5.model.mongo.DocumentListBinding", {
 
-    constructor: function(oModel, sPath, oContext, aSorters, aFilters, mParameters) {
+    constructor: function constructor(oModel, sPath, oContext, aSorters, aFilters, mParameters) {
 
       ListBinding.call(this, oModel, sPath, oContext, aSorters, aFilters, mParameters);
 
@@ -47,7 +43,9 @@ sap.ui.define([
 
   });
 
-  cDocumentListBinding.prototype._runQuery = function() {
+  cDocumentListBinding.prototype._runQuery = function () {
+    var _this = this;
+
     // Stop observing changes in any existing query.  Will run forever otherwise.
     if (this._oQueryHandle) {
       this._oQueryHandle.stop();
@@ -58,29 +56,29 @@ sap.ui.define([
     this._fireChange(ChangeReason.remove);
 
     // Run query
-    const oCursor = this.oModel.runQuery(this.sPath, this.oContext, this.aSorters, this.aApplicationFilters);
+    var oCursor = this.oModel.runQuery(this.sPath, this.oContext, this.aSorters, this.aApplicationFilters);
 
     // Create query handle so we can observe changes
     // var that = this;
     this._oQueryHandle = oCursor.observeChanges({
-      addedBefore: (id, fields, before) => {
-        const oContext = new Context(this.oModel, this.sPath + "(" + id + ")");
-        this._aContexts.push(oContext);
-        this.fireDataReceived();
-        this._fireChange(ChangeReason.add);
+      addedBefore: function addedBefore(id, fields, before) {
+        var oContext = new Context(_this.oModel, _this.sPath + "(" + id + ")");
+        _this._aContexts.push(oContext);
+        _this.fireDataReceived();
+        _this._fireChange(ChangeReason.add);
       },
 
-      changed: (id, fields) => {
+      changed: function changed(id, fields) {
         //TODO performance - work out how to only update data that has changed
-        this.oModel.refresh();
+        _this.oModel.refresh();
       },
 
-      removed: (id) => {
+      removed: function removed(id) {
         //TODO performance - work out how to only update data that has changed
-        this.oModel.refresh();
+        _this.oModel.refresh();
       }
     });
-  }
+  };
 
   /**
    * Returns an array of binding contexts for the bound target list.
@@ -97,19 +95,19 @@ sap.ui.define([
    *
    * @protected
    */
-  cDocumentListBinding.prototype.getContexts = function(iStartIndex, iLength) {
+  cDocumentListBinding.prototype.getContexts = function (iStartIndex, iLength) {
     // TODO Optimize the interplay between this method and the observeChanges.added
     // code added to the query.  It's exponentially better than it was but is still
     // being called every time dataChange is fired so if the query results
     // in say 830 records, then it is called 830 times returning 0..830 records.
     // NOTE above does not seem to impact performace with local testing of 830
     // records so may be a low priority issue or no issue at all.
-    const iStart = iStartIndex === undefined ? 0 : iStartIndex;
-    const iLen = iLength === undefined ? this.oModel.iSizeLimit - iStart : iLength;
+    var iStart = iStartIndex === undefined ? 0 : iStartIndex;
+    var iLen = iLength === undefined ? this.oModel.iSizeLimit - iStart : iLength;
     return this._aContexts.slice(iStart).splice(0, iLen);
   };
 
-  cDocumentListBinding.prototype.destroy = function() {
+  cDocumentListBinding.prototype.destroy = function () {
     // Call stop on queryHandle on destroy of meteor model per docs:
     // "observeChanges returns a live query handle, which is an object with a
     // stop method. Call stop with no arguments to stop calling the callback functions
@@ -130,7 +128,7 @@ sap.ui.define([
    *
    * @public
    */
-  cDocumentListBinding.prototype.filter = function(aFilters, sFilterType) {
+  cDocumentListBinding.prototype.filter = function (aFilters, sFilterType) {
     // Replace contents of aFilters property
     this.aFilters = [];
     if (!jQuery.isArray(aFilters) && aFilters instanceof Filter) {
@@ -153,7 +151,7 @@ sap.ui.define([
    * @return {meteor-ui5.model.mongo.DocumentListBinding} returns <code>this</code> to facilitate method chaining
    * @public
    */
-  cDocumentListBinding.prototype.sort = function(aSorters) {
+  cDocumentListBinding.prototype.sort = function (aSorters) {
     // Replace contents of aSorters property
     Array.isArray(aSorters) ? this.aSorters = aSorters : this.aSorters = [aSorters];
 
@@ -172,7 +170,7 @@ sap.ui.define([
    * @since 1.28
    * @public
    */
-  cDocumentListBinding.prototype.getCurrentContexts = function() {
+  cDocumentListBinding.prototype.getCurrentContexts = function () {
     return this._aContexts;
   };
 
@@ -184,7 +182,7 @@ sap.ui.define([
    * @since 1.24
    * @public
    */
-  cDocumentListBinding.prototype.getLength = function() {
+  cDocumentListBinding.prototype.getLength = function () {
     return this._aContexts.length;
   };
 
@@ -196,7 +194,7 @@ sap.ui.define([
    * @since 1.24
    * @public
    */
-  cDocumentListBinding.prototype.isLengthFinal = function() {
+  cDocumentListBinding.prototype.isLengthFinal = function () {
     // TODO don't know what to do here yet.  Can't get this method
     // to trigger and in any case, the only way to calculate if queryHandle.count()
     // is final is to introduce subscriptions to the model which I've been
@@ -216,7 +214,7 @@ sap.ui.define([
    *
    * @public
    */
-  cDocumentListBinding.prototype.getDistinctValues = function(sPath) {
+  cDocumentListBinding.prototype.getDistinctValues = function (sPath) {
     // TODO what's supposed to go here?
     return null;
   };
@@ -228,7 +226,7 @@ sap.ui.define([
    * @param {function|string} vKey The path of the property containing the key or a function getting the context as only parameter to calculate a key to identify an entry
    * @private
    */
-  cDocumentListBinding.prototype.enableExtendedChangeDetection = function(bDetectUpdates, vKey) {
+  cDocumentListBinding.prototype.enableExtendedChangeDetection = function (bDetectUpdates, vKey) {
 
     // TODO: BELOW CODE HAS BEEN COPIED VERBATIM FROM 'sap/ui/model/ListBinding'
     // DON'T KNOW HOW IT WORKS AND WHAT IT IS SUPPOSED TO DO SO HOISTING INTO THIS CLASS
@@ -237,7 +235,7 @@ sap.ui.define([
     this.bUseExtendedChangeDetection = true;
     this.bDetectUpdates = bDetectUpdates;
     if (typeof vKey === "string") {
-      this.fnGetEntryKey = function(oContext) {
+      this.fnGetEntryKey = function (oContext) {
         return oContext.getProperty(vKey);
       };
     } else if (typeof vKey === "function") {
@@ -249,5 +247,5 @@ sap.ui.define([
   };
 
   return cDocumentListBinding;
-
 });
+//# sourceMappingURL=DocumentListBinding.js.map
