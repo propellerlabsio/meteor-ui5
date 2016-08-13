@@ -6,10 +6,9 @@
 import fs from 'fs';
 
 const PACKAGE_PATH = '/packages/propellerlabsio_meteor-ui5';
-const REDIRECT_PREFIX = 'src/ui5/'; // TODO: convert to instead of src when build system is implemented.
+const REDIRECT_PREFIX = 'src/ui5/'; // TODO: convert to dist when build system is implemented.
 
 // Connect handlers for ui5 model and controls
-// WebApp.connectHandlers.use('meteor-ui5', function(req, res, next) {
 WebApp.connectHandlers.use(PACKAGE_PATH, function(req, res, next) {
   let redirectURL;
 
