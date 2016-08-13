@@ -13,7 +13,8 @@ Please see the [Meteor Ui5 website](http://meteor-ui5.propellerlabs.io) for docu
 * [Tutorial](http://meteor-ui5.propellerlabs.io/#/tutorial)
 
 ## Building
-Run `npm run-script build` after making any changes to files in the `src/` directory. This will rebuild the `dist/` files and the documentation.  Meteor's own build tool will handle everything after that.
+1. After cloning the repo, run `npm install` to install build dependencies.
+1. Run `npm run-script build` after making any changes to files in the `src/` directory. This will rebuild the `dist/` files and the documentation.  Meteor's own build tool will handle everything after that.
 
 ## Roadmap
 
