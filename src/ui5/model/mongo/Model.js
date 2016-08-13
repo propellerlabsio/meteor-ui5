@@ -7,7 +7,6 @@
  * @namespace meteor-ui5.model.mongo
  */
 
-// Provides the base implementation for all model implementations
 sap.ui.define([
   'jquery.sap.global',
   'sap/ui/model/Model',

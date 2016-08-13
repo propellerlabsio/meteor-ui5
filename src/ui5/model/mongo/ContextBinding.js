@@ -1,4 +1,3 @@
-// Provides an abstraction for list bindings
 sap.ui.define([
     'sap/ui/model/ContextBinding',
     'sap/ui/model/ChangeReason'
@@ -10,18 +9,20 @@ sap.ui.define([
      * Constructor for ContextBinding
      *
      * @class
-     * The ContextBinding is a specific binding for a setting context for the model
+     * Provides a specialized context binding that can be used to bind to a single
+     * document in a Meteor Mongo Collection.  Each instance of this class
+     * observes changes on a query handle to provide reactive updates via firing
+     * events.
      *
-     * @param {sap.ui.model.Model} oModel
+     * @param {meteor-ui5.model.mongo.Model} oModel
      * @param {String} sPath
      * @param {Object} oContext
      * @param {Object} [mParameters]
-     * @abstract
      * @public
      * @alias meteor-ui5.model.mongo.ContextBinding
      * @extends sap.ui.model.ContextBinding
      */
-    var cContextBinding = ContextBinding.extend("meteor-ui5.model.mongo.ContextBinding", /** @lends meteor-ui5.model.mongo.ContextBinding.prototype */ {
+    var cContextBinding = ContextBinding.extend("meteor-ui5.model.mongo.ContextBinding",  {
 
       constructor: function(oModel, sPath, oContext, mParameters, oEvents) {
         // Call super constructor

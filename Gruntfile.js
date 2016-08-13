@@ -82,8 +82,8 @@ module.exports = function(grunt) {
       var debugFilesCreated = 0;
       var sourceMapsCopied = 0;
 
-      // Recurse source directory copying unminfied javascript to dist directory
-      // but where target has "-dbg" in the name before the first dot.
+      // Recurse babel output directory copying unminfied javascript to dist
+      // directory but with "-dbg" in the name before the first dot.
       grunt.file.recurse(
         'temp/babel_out',
         function(abspath, root, subdir, filename) {

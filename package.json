@@ -1,7 +1,7 @@
 {
-  "name": "meteor-ui5",
+  "name": "Meteor-UI5-package-builder",
   "version": "0.1.0",
-  "description": "Meteor package to build OpenUI5 apps with Meteor. NOTE: This is not an NPM-published package.  This file only serves the Grunt build tool.",
+  "description": "Build system for Meteor package. NOTE: This is not an NPM-published package.  This file only serves the Grunt build tool for building an Atmosphere package.",
   "main": "package.js",
   "directories": {
     "doc": "doc"
