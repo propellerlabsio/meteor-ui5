@@ -1,57 +1,19 @@
-# meteor-ui5
+# Meteor-UI5
 This package is a work in progress for using UI5 with Meteor.  It contains
 a new UI5 model for reactively binding meteor collections and queries to
-UI5 controls.
+UI5 controls.  It does not include the OpenUI5 library itself which has to be bootstrapped via a script element in HTML in the normal manner.
 
-It does not include the OpenUI5 library itself which has to be bootstrapped via a script element in HTML in the normal manner.
+**WARNING:** This software is in an early beta state. `0.x` point releases may contain breaking changes.
 
-**WARNING: THIS SOFTWARE IN AN EARLY ALPHA STATE.**
+## Using this package
+This package can be added to your meteor project with ```meteor add propellerlabsio:meteor-ui5```.
 
-## Demos and docs
-Please see the [Meteor Ui5 website at PropellerLabs.io](http://meteor-ui5.propellerlabs.io) for documentation and working examples of all of the features of this package.  
+Please see the [Meteor Ui5 website](http://meteor-ui5.propellerlabs.io) for documentation and demos of all of the features of this package. In particular, the following resources might be useful:
+* [Quickstart guide](http://meteor-ui5.propellerlabs.io/#/docs/quickstart)
+* [Tutorial](http://meteor-ui5.propellerlabs.io/#/tutorial)
 
-## Quickstart
-1. Add the package to your meteor project with ```meteor add propellerlabsio:meteor-ui5```.
-1. Remove Blaze
-    1. Remove Blaze with `meteor remove blaze-html-templates`.
-    2. Add static-html support with `meteor add static-html`.
-1. Create a folder called `webapp` for your UI5 app in the public folder of the root directory.
-    I.e. `/public/webapp`.
-1. Bootstrap UI5.  
-Create a single html file in your project's client folder.  In your app's HTML file, bootstrap UI5 in the manner [described in the OpenUI5 docs](http://openui5.org/getstarted.html#step1).  In your OpenUI5 bootstrap script, add the public folder you created in the previous step and meteor-ui5 as resource roots.  Do not include the `/public` part of your UI5 app folder path:
-  ```json
-data-sap-ui-resourceroots='{
-  "myui5app": "/webapp/"
-  "meteor-ui5": "/packages/propellerlabsio_meteor-ui5/"
-}
-  ```
-1. Instantiate a meteor model for your UI5 views/controls.  You can reference any `meteor-ui5` component in any `sap.ui.define` like this:
-  ```js
-sap.ui.define(
-  [
-      "sap/ui/core/mvc/Controller",
-      "sap/m/MessageToast",
-      "meteor-ui5/model/mongo/Model"
-  ],
-  function(Controller, MessageToast, MeteorModel) {
-  ```
-
-1. Access data from your meteor mongo collections. E.g:
-  1. Controler code:
-  ```js
-    onInit: function() {
-      // Create Meteor model
-      var oModel = new MeteorModel();
-      this.getView().setModel(oModel);
-    },
-  ```
-  2. View code:
-  ```xml
-    <!-- List all orders in mongo collection Orders -->
-    <Table id="OrdersTable" items="{/Orders}">
-        <!-- Define your columns here -->
-    <Table>
-  ```
+## Building
+Run `npm run-script build` after making any changes to files in the `src/` directory. This will rebuild the `dist/` files and the documentation.  Meteor's own build tool will handle everything after that.
 
 ## Roadmap
 

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Documentation Index</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.simplex.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top ">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Documentation</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="meteor-ui5.control.html">meteor-ui5.control</a></li><li><a href="meteor-ui5.model.apollo.html">meteor-ui5.model.apollo</a></li><li><a href="meteor-ui5.model.mongo.html">meteor-ui5.model.mongo</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="meteor-ui5.model.mongo.ContextBinding.html">meteor-ui5.model.mongo.ContextBinding</a></li><li><a href="meteor-ui5.model.mongo.DocumentListBinding.html">meteor-ui5.model.mongo.DocumentListBinding</a></li><li><a href="meteor-ui5.model.mongo.Model.html">meteor-ui5.model.mongo.Model</a></li><li><a href="meteor-ui5.model.mongo.PropertyBinding.html">meteor-ui5.model.mongo.PropertyBinding</a></li><li><a href="meteor-ui5.model.mongo.PropertyListBinding.html">meteor-ui5.model.mongo.PropertyListBinding</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+		<div class="col-sm-3 col-md-3">
+            <form class="navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-8">
+	
+		<div id="main">
+			
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+
+
+
+
+
+    <section class="readme-section">
+        <article><h1>Meteor-UI5</h1><p>This package is a work in progress for using UI5 with Meteor.  It contains
+a new UI5 model for reactively binding meteor collections and queries to
+UI5 controls.  It does not include the OpenUI5 library itself which has to be bootstrapped via a script element in HTML in the normal manner.</p>
+<p><strong>WARNING:</strong> This software is in an early beta state. <code>0.x</code> point releases may contain breaking changes.</p>
+<h2>Using this package</h2><p>This package can be added to your meteor project with <code>meteor add propellerlabsio:meteor-ui5</code>.</p>
+<p>Please see the <a href="http://meteor-ui5.propellerlabs.io">Meteor Ui5 website</a> for documentation and demos of all of the features of this package. In particular, the following resources might be useful:</p>
+<ul>
+<li><a href="http://meteor-ui5.propellerlabs.io/#/docs/quickstart">Quickstart guide</a></li>
+<li><a href="http://meteor-ui5.propellerlabs.io/#/tutorial">Tutorial</a></li>
+</ul>
+<h2>Building</h2><p>Run <code>npm run-script build</code> after making any changes to files in the <code>src/</code> directory. This will rebuild the <code>dist</code> files and the documentation.  Meteor's own build tool will handle everything after that.</p>
+<h2>Roadmap</h2><p>This is the roadmap for the <code>meteor-ui5</code> package:</p>
+<h3>v0.1 - This version currently under construction</h3><ol>
+<li>Clean up &amp; complete jsdoc comments in all code.</li>
+<li>Add license files and headers.</li>
+</ol>
+<h3>v0.2+</h3><ol>
+<li>Add multifilter support (where single filter object is itself an array of filters with and/or conditions defined between them).</li>
+<li>Filtering/sorting on list binding to array properties of single documents.</li>
+<li>Add support for two-way binding (requires allow write to collections - not Meteor best practice which is update via method).</li>
+<li>Add support for paging.  UI5 instantiates multiple control objects for every record in a list.  Need to limit the amount of front-end memory consumed when paging through large lists.</li>
+<li>Incorporate UI5 webapp into meteor build process.</li>
+<li>Build Meteor UI5 version of accounts-ui for integration with unified shell.</li>
+</ol>
+<h3>Maybe</h3><ol>
+<li>Add TreeBinding model</li>
+</ol>
+<h2>License</h2><p>This software is licensed under the Apache License, Version 2.0 - see LICENSE.txt</p></article>
+    </section>
+
+
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
+	
+
+</div>
+</div>
+
+<div class="modal fade" id="searchResults">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Search results</h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
+<footer>
+
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+	
+		on 2016-08-13T16:18:17+07:00
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : false,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			var id = $( heading ).attr( "id" );
+			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		SearcherDisplay.init();
+	});
+</script>
+
+</body>
+</html>

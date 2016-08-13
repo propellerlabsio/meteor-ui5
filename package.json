@@ -1,0 +1,37 @@
+{
+  "name": "meteor-ui5",
+  "version": "0.1.0",
+  "description": "Meteor package to build OpenUI5 apps with Meteor. NOTE: This is not an NPM-published package.  This file serves the Grunt build tool.",
+  "main": "package.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "dependencies": {
+    "grunt": "^1.0.1"
+  },
+  "devDependencies": {
+    "grunt-cli": "^1.2.0",
+    "grunt-jsdoc": "^2.1.0",
+    "ink-docstrap": "^1.2.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "grunt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/propellerlabsio/meteor-ui5.git"
+  },
+  "keywords": [
+    "meteor",
+    "ui5",
+    "openui5",
+    "sapui5"
+  ],
+  "author": "PropellerLabs.io",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/propellerlabsio/meteor-ui5/issues"
+  },
+  "homepage": "http://meteor-ui5.propellerlabs.io"
+}
