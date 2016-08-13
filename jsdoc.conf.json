@@ -9,10 +9,12 @@
   },
   "plugins": [],
   "templates": {
-    "cleverLinks": false,
-    "monospaceLinks": false,
-    "default": {
-    }
+    "systemName"            : "Meteor-UI5 Package",
+    "copyright"             : "Copyright 2016 PropellerLabs.io",
+    "includeDate"           : true,
+    "theme"                 : "cerulean",
+    "linenums"              : true,
+    "collapseSymbols"       : true
   },
   "opts": {
     "recurse": true                  // same as -r
