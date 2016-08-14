@@ -1,7 +1,3 @@
-/*!
- * ${copyright}
- */
-
 /**
  * Meteor UI5 Mongo Model
  * @namespace meteor-ui5.model.mongo
@@ -30,9 +26,10 @@ sap.ui.define([
   "use strict";
 
   /**
-   * Constructor for a new Model.
+   * @summary Constructor for a new Model.
    *
-   * Every Model is a MessageProcessor that is able to handle Messages with the normal binding path syntax in the target.
+   * @description This model provides the interface between UI5 and a Meteor
+   * application that uses  the Mongo and Minimongo databases.
    *
    * @class
    *
@@ -45,7 +42,7 @@ sap.ui.define([
    * @public
    * @alias meteor-ui5.model.mongo.Model
    */
-  var cModel = Model.extend("meteor-ui5.model.mongo.Model",  {
+  var cModel = Model.extend("meteor-ui5.model.mongo.Model", {
 
     constructor: function(iSizeLimit) {
       Model.apply(this, arguments);
@@ -71,7 +68,6 @@ sap.ui.define([
   /**
    * Return new PropertyBinding for given parameters
    *
-   * @name meteor-ui5.model.mongo.Model.prototype.bindProperty
    * @function
    * @param {string}
    *         sPath the path pointing to the property that should be bound
@@ -79,7 +75,7 @@ sap.ui.define([
    *         [oContext=null] the context object for this databinding (optional)
    * @param {object}
    *         [mParameters=null] additional model specific parameters (optional)
-   * @return {sap.ui.model.PropertyBinding}
+   * @return {meteor-ui5.model.mongo.PropertyBinding}
    *
    * @public
    */
@@ -88,11 +84,13 @@ sap.ui.define([
     return oBinding;
   }
 
-
   /**
-   * Return new DocumentListBinding for given parameters
+   * @summary Return new list binding of appropriate type for given parameters
    *
-   * @name meteor-ui5.model.mongo.Model.prototype.bindList
+   * @description Returns either a DocumentListBinding or PropetyListBinding
+   * depending on whether we are binding to a list of documents or an array
+   * property in a single document.
+   *
    * @function
    * @param {string}
    *         sPath the path pointing to the list / array that should be bound
@@ -104,7 +102,8 @@ sap.ui.define([
    *         [aFilters=null] predefined filter/s (can be either a filter or an array of filters) (optional)
    * @param {object}
    *         [mParameters=null] additional model specific parameters (optional)
-   * @return {sap.ui.model.ListBinding}
+   * @return {meteor-ui5.model.mongo.DocumentListBinding |
+   *         meteor-ui5.model.mongo.PropertyListBinding}
 
    * @public
    */
@@ -121,9 +120,8 @@ sap.ui.define([
   }
 
   /**
-   * Implement in inheriting classes
+   * @summary Tree binding not yet implemented.
    *
-   * @name meteor-ui5.model.mongo.Model.prototype.bindTree
    * @function
    * @param {string}
    *         sPath the path pointing to the tree / array that should be bound
@@ -135,7 +133,7 @@ sap.ui.define([
    *         [mParameters=null] additional model specific parameters (optional)
    * @param {array}
    *         [aSorters=null] predefined sap.ui.model.sorter/s contained in an array (optional)
-   * @return {sap.ui.model.TreeBinding}
+   * @return {meteor-ui5.model.mongo.TreeBinding}
 
    * @public
    */
@@ -143,9 +141,10 @@ sap.ui.define([
   // deprecated.
 
   /**
-   * Create binding context. (Implementation copied from ClientModel.js)
+   * @summary Create binding context.
    *
-   * @name meteor-ui5.model.mongo.Model.prototype.createBindingContext
+   * @description Implementation copied from sap.ui.model.ClientModel
+   *
    * @function
    * @param {string}
    *         sPath the path to create the new context from
@@ -185,51 +184,35 @@ sap.ui.define([
   };
 
   /**
-   * Implement in inheriting classes
+   * @summary Destroys a binding context
    *
-   * @name meteor-ui5.model.mongo.Model.prototype.destroyBindingContext
    * @function
    * @param {object}
    *         oContext to destroy
-
    * @public
    */
-  //TODO implement this
-
-  /**
-   * Alternative to lodash _.get so we don't have to include whole library
-   *
-   * Code taken from: https://gist.github.com/jeneg/9767afdcca45601ea44930ea03e0febf
-   * TODO: test that this works in all likely instances
-   * @param  {object} obj The object containing the desired property
-   * @param  {string} path The path to the property
-   * @param  {string|number} def Default value if property not found
-   * @return {string|number} The property value
-   */
-  cModel.prototype._get = function(obj, path, def) {
-    var fullPath = path
-      .replace(/\[/g, '.')
-      .replace(/]/g, '')
-      .split('.')
-      .filter(Boolean);
-
-    return fullPath.every(everyFunc) ? obj : def;
-
-    function everyFunc(step) {
-      return !(step && (obj = obj[step]) === undefined);
+  cModel.prototype.destroyBindingContext = function(oContext) {
+    if (oContext.hasOwnProperty("destroy")) {
+      oContext.destroy();
     }
-  };
-
+  }
 
   /**
-   * Implement in inheriting classes
+   * @summary Returns the value of a property at a given path in a given context.
    *
-   * @name meteor-ui5.model.mongo.Model.prototype.getProperty
+   * @description Resolves a context and path and returns the value (of any
+   * data type).  This method also handles Lookup Property paths in the form of
+   * ?Customers("CustomerID") where ?Customers is the Mongo collection to be
+   * queried and "CustomerId" is the name of the property at the current path
+   * that contains the unique Mongo Id of the customer document.
+   * @see meteor-ui5.model.mongo.Model.prototype._getLookupProperty
+   *
    * @function
    * @param {string}
    *         sPath the path to where to read the attribute value
    * @param {object}
    *		   [oContext=null] the context with which the path should be resolved
+   * @return {object|object[]|string|number}
    * @public
    */
   cModel.prototype.getProperty = function(sPath, oContext) {
@@ -237,7 +220,7 @@ sap.ui.define([
 
     // Check we have a context or we can't return a property - not yet sure
     // why this is sometimes being called when context hasn't been set yet
-    // (Grid Table)
+    // (ie from Grid Table)
     if (!oContext) {
       return;
     }
@@ -266,10 +249,24 @@ sap.ui.define([
     return propertyValue;
   }
 
-  cModel.prototype._getLookupProperty = function(oCurrentDocument, sLookupPath) {
-    // This is a lookup query, e.g.: "?Customers(CustomerID)/CompanyName"
-    // Create context and path to lookup property in another collection
 
+  /**
+   * @summary Returns the value of a property for a lookup query
+   *
+   * @description This method handles Lookup Property paths in the form of
+   * ?Customers("CustomerID") where ?Customers is the Mongo collection to be
+   * queried and "CustomerId" is the name of the property in the current document
+   * that contains the unique Mongo Id of the customer document.
+   *
+   * @function
+   * @param {object}
+   *		   oCurrentDocument the document containing the id of the lookup document
+   * @param {string}
+   *         sLookupPath the path to where to read the attribute value
+   * @return {object|object[]|string|number}
+   * @private
+   */
+  cModel.prototype._getLookupProperty = function(oCurrentDocument, sLookupPath) {
     // Build context path for querying lookup collection.  Note:
     // components.documentId actually contains property name in
     // current document
@@ -293,19 +290,20 @@ sap.ui.define([
   }
 
   /**
-   * Implement in inheriting classes
+   * @summary Resolves a path and context and returns Mongo components
+   *
+   * @description For a given path and context, return Mongo components such
+   * as collection name, document id.  The remainder of the path is returned
+   * as a value that can be resolved against a document using _.get()
    *
    * @param {string}
-   *         sPath the path to where to read the object
+   *         sPath the path to where to read the attribute value
    * @param {object}
    *		   [oContext=null] the context with which the path should be resolved
-   * @public
+   * @return {object}
+   *         Object containing collectionName, documentId and propertyPath
+   * @private
    */
-  cModel.prototype.getObject = function(sPath, oContext) {
-    return this.getProperty(sPath, oContext);
-  };
-
-  /* Resolve and return all components from path */
   cModel.prototype._getPathComponents = function(sPath, oContext) {
 
     // Define object this method returns.  Some or all properties will be
@@ -382,7 +380,20 @@ sap.ui.define([
     return oComponents;
   };
 
-  /* Builds and runs mongo collection find and returns meteor cursor */
+  /**
+   * @summary Builds and runs a Mongo query and returns a cursor
+   *
+   * @description Builds a mongo selector, sort options and runs a query on the
+   * database for a context and path.  It returns a cursor that changes can be
+   * observed on to provide reactive updates.
+   *
+   * @param {string} sPath
+   * @param {sap.ui.model.Context} oContext
+   * @param {array} [aSorters] initial sort order
+   * @param {array} [aFilters] predefined filter/s
+   * @return {object} A mongo cursor
+   * @public
+   */
   cModel.prototype.runQuery = function(sPath, oContext, aSorters, aFilters) {
     // Resolve path and get components (collection name, document id)
     var oPathComponents = this._getPathComponents(sPath, oContext);
@@ -414,6 +425,50 @@ sap.ui.define([
 
   }
 
+  /**
+   * @summary Creates a new ContextBinding
+   *
+   * @function
+   * @param {string | object}
+   *         sPath the path pointing to the property that should be bound or an object
+   *         which contains the following parameter properties: path, context, parameters
+   * @param {object}
+   *         [oContext=null] the context object for this databinding (optional)
+   * @param {object}
+   *         [mParameters=null] additional model specific parameters (optional)
+   * @param {object}
+   *         [oEvents=null] event handlers can be passed to the binding ({change:myHandler})
+   * @return {meteor-ui5.model.mongo.ContextBinding}
+   *
+   * @public
+   */
+  cModel.prototype.bindContext = function(sPath, oContext, mParameters) {
+    var oBinding = new ContextBinding(this, sPath, oContext, mParameters);
+    return oBinding;
+  };
+
+  /**
+   * @summary Destroys the model and clears the model data.
+   *
+   * @public
+   */
+  cModel.prototype.destroy = function() {
+    // Call destroy on each binding where method exists
+    this.aBindings.forEach(function(oBinding) {
+      if (oBinding.hasOwnProperty("destroy")) {
+        oBinding.destroy();
+      }
+    });
+
+    // Call super
+    Model.prototype.destroy.apply(this, arguments);
+  };
+
+  /**
+   * @summary Build Mongo selector for UI5 filters
+   * @param  {sap.ui.filter[]} aFilters An array of UI5 filters
+   * @return {object}          A mongo selector for use with collection.Find or FindOne
+   */
   cModel.prototype._buildMongoSelector = function(aFilters) {
     let oMongoSelector = {};
     // Build mongo selector incorporating each filter
@@ -521,6 +576,15 @@ sap.ui.define([
     return oMongoSelector;
   };
 
+  /**
+   * @summary Build's a mongo sort specifier for use with collection.find()
+   *
+   * @description Takes an array of standard UI5 sorters and converts to a single
+   * Mongo sort specifier.
+   * @param  {sap.ui.model.sorter[]} aSorters An array of UI5 sorters
+   * @return {object}          Mongo sort specifier
+   * @private
+   */
   cModel.prototype._buildMongoSortSpecifier = function(aSorters) {
     let oMongoSortSpecifier = {};
     aSorters.forEach((oSorter) => {
@@ -558,107 +622,32 @@ sap.ui.define([
     return oMongoSortSpecifier;
   };
 
-
   /**
-   * Create ContextBinding
+   * @summary Alternative to lodash _.get so we don't have to include whole library
    *
-   * @name meteor-ui5.model.mongo.Model.prototype.bindContext
-   * @function
-   * @param {string | object}
-   *         sPath the path pointing to the property that should be bound or an object
-   *         which contains the following parameter properties: path, context, parameters
-   * @param {object}
-   *         [oContext=null] the context object for this databinding (optional)
-   * @param {object}
-   *         [mParameters=null] additional model specific parameters (optional)
-   * @param {object}
-   *         [oEvents=null] event handlers can be passed to the binding ({change:myHandler})
-   * @return {sap.ui.model.ContextBinding}
+   * @description Code taken from:
+   * https://gist.github.com/jeneg/9767afdcca45601ea44930ea03e0febf
+   * TODO: test that this works in all likely instances
    *
-   * @public
+   * @param  {object} obj The object containing the desired property
+   * @param  {string} path The path to the property
+   * @param  {*} def Default value if property not found
+   * @return {*} The property value
+   *
+   * @private
    */
-  cModel.prototype.bindContext = function(sPath, oContext, mParameters) {
-    var oBinding = new ContextBinding(this, sPath, oContext, mParameters);
-    return oBinding;
-  };
+  cModel.prototype._get = function(obj, path, def) {
+    var fullPath = path
+      .replace(/\[/g, '.')
+      .replace(/]/g, '')
+      .split('.')
+      .filter(Boolean);
 
-  /**
-   * @see sap.ui.model.Model.prototype.bindElement
-   *
-   */
+    return fullPath.every(everyFunc) ? obj : def;
 
-  /**
-   * Gets a binding context. If context already exists, return it from the map,
-   * otherwise create one using the context constructor.
-   *
-   * @param {string} sPath the path
-   */
-  cModel.prototype.getContext = function(sPath) {
-    if (!jQuery.sap.startsWith(sPath, "/")) {
-      throw new Error("Path " + sPath + " must start with a / ");
+    function everyFunc(step) {
+      return !(step && (obj = obj[step]) === undefined);
     }
-    var oContext = this.mContexts[sPath];
-    if (!oContext) {
-      oContext = new Context(this, sPath);
-      this.mContexts[sPath] = oContext;
-    }
-    return oContext;
-  };
-
-  /**
-   * Resolve the path relative to the given context.
-   *
-   * If a relative path is given (not starting with a '/') but no context,
-   * then the path can't be resolved and undefined is returned.
-   *
-   * For backward compatibility, the behavior of this method can be changed by
-   * setting the 'legacySyntax' property. Then an unresolvable, relative path
-   * is automatically converted into an absolute path.
-   *
-   * @param {string} sPath path to resolve
-   * @param {sap.ui.core.Context} [oContext] context to resolve a relative path against
-   * @return {string} resolved path or undefined
-   */
-  cModel.prototype.resolve = function(sPath, oContext) {
-    var bIsRelative = typeof sPath == "string" && !jQuery.sap.startsWith(sPath, "/"),
-      sResolvedPath = sPath,
-      sContextPath;
-    if (bIsRelative) {
-      if (oContext) {
-        sContextPath = oContext.getPath();
-        sResolvedPath = sContextPath + (jQuery.sap.endsWith(sContextPath, "/") ? "" : "/") + sPath;
-      } else {
-        sResolvedPath = this.isLegacySyntax() ? "/" + sPath : undefined;
-      }
-    }
-    if (!sPath && oContext) {
-      sResolvedPath = oContext.getPath();
-    }
-    // invariant: path never ends with a slash ... if root is requested we return /
-    if (sResolvedPath && sResolvedPath !== "/" && jQuery.sap.endsWith(sResolvedPath, "/")) {
-      sResolvedPath = sResolvedPath.substr(0, sResolvedPath.length - 1);
-    }
-    return sResolvedPath;
-  };
-
-  /**
-   * Destroys the model and clears the model data.
-   * A model implementation may override this function and perform model specific cleanup tasks e.g.
-   * abort requests, prevent new requests, etc.
-   *
-   * @see sap.ui.base.Object.prototype.destroy
-   * @public
-   */
-  cModel.prototype.destroy = function() {
-    // Call destroy on each binding where method exists
-    this.aBindings.forEach(function(oBinding) {
-      if (oBinding.hasOwnProperty("destroy")) {
-        oBinding.destroy();
-      }
-    });
-
-    // Call super
-    Model.prototype.destroy.apply(this, arguments);
   };
 
   return cModel;

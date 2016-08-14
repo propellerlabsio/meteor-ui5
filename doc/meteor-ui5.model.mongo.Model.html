@@ -94,14 +94,15 @@
     <h4 class="name" id="Model"><span class="type-signature"></span>new Model()</h4>
     
     
+    <p class="summary">Constructor for a new Model.</p>
+    
 </dt>
 <dd>
 
     
     <div class="description">
-        Constructor for a new Model.
-
-Every Model is a MessageProcessor that is able to handle Messages with the normal binding path syntax in the target.
+        This model provides the interface between UI5 and a Meteor
+application that uses  the Mongo and Minimongo databases.
     </div>
     
 
@@ -214,19 +215,14 @@ Every Model is a MessageProcessor that is able to handle Messages with the norma
             
 <hr>
 <dt>
-    <h4 class="name" id="_get"><span class="type-signature"></span>_get(obj, path, def)</h4>
+    <h4 class="name" id="_buildMongoSelector"><span class="type-signature"></span>_buildMongoSelector(aFilters)</h4>
     
+    
+    <p class="summary">Build Mongo selector for UI5 filters</p>
     
 </dt>
 <dd>
 
-    
-    <div class="description">
-        Alternative to lodash _.get so we don't have to include whole library
-
-Code taken from: https://gist.github.com/jeneg/9767afdcca45601ea44930ea03e0febf
-TODO: test that this works in all likely instances
-    </div>
     
 
     
@@ -260,13 +256,13 @@ TODO: test that this works in all likely instances
 
         <tr>
             
-                <td class="name"><code>obj</code></td>
+                <td class="name"><code>aFilters</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">Array.&lt;sap.ui.filter></span>
 
 
 
@@ -277,58 +273,7 @@ TODO: test that this works in all likely instances
 
             
 
-            <td class="description last">The object containing the desired property</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>path</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The path to the property</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>def</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Default value if property not found</td>
+            <td class="description last">An array of UI5 filters</td>
         </tr>
 
     
@@ -392,7 +337,7 @@ TODO: test that this works in all likely instances
     
             
 <div class="param-desc">
-    The property value
+    A mongo selector for use with collection.Find or FindOne
 </div>
 
 
@@ -403,10 +348,7 @@ TODO: test that this works in all likely instances
     </dt>
     <dd>
         
-<span class="param-type">string</span>
-|
-
-<span class="param-type">number</span>
+<span class="param-type">object</span>
 
 
 
@@ -426,13 +368,11 @@ TODO: test that this works in all likely instances
     <h4 class="name" id="bindContext"><span class="type-signature"></span>bindContext(sPath [, oContext] [, mParameters] [, oEvents])</h4>
     
     
+    <p class="summary">Creates a new ContextBinding</p>
+    
 </dt>
 <dd>
 
-    
-    <div class="description">
-        Create ContextBinding
-    </div>
     
 
     
@@ -694,7 +634,7 @@ TODO: test that this works in all likely instances
     </dt>
     <dd>
         
-<span class="param-type">sap.ui.model.ContextBinding</span>
+<span class="param-type"><a href="meteor-ui5.model.mongo.ContextBinding.html">meteor-ui5.model.mongo.ContextBinding</a></span>
 
 
 
@@ -714,12 +654,16 @@ TODO: test that this works in all likely instances
     <h4 class="name" id="bindList"><span class="type-signature"></span>bindList(sPath [, oContext] [, aSorters] [, aFilters] [, mParameters])</h4>
     
     
+    <p class="summary">Return new list binding of appropriate type for given parameters</p>
+    
 </dt>
 <dd>
 
     
     <div class="description">
-        Return new DocumentListBinding for given parameters
+        Returns either a DocumentListBinding or PropetyListBinding
+depending on whether we are binding to a list of documents or an array
+property in a single document.
     </div>
     
 
@@ -1018,7 +962,10 @@ TODO: test that this works in all likely instances
     </dt>
     <dd>
         
-<span class="param-type">sap.ui.model.ListBinding</span>
+<span class="param-type"><a href="meteor-ui5.model.mongo.DocumentListBinding.html">meteor-ui5.model.mongo.DocumentListBinding</a></span>
+|
+
+<span class="param-type"><a href="meteor-ui5.model.mongo.PropertyListBinding.html">meteor-ui5.model.mongo.PropertyListBinding</a></span>
 
 
 
@@ -1262,331 +1209,7 @@ TODO: test that this works in all likely instances
     </dt>
     <dd>
         
-<span class="param-type">sap.ui.model.PropertyBinding</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="bindTree"><span class="type-signature"></span>bindTree(sPath [, oContext] [, aFilters] [, mParameters] [, aSorters])</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Implement in inheriting classes
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Argument</th>
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>sPath</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">the path pointing to the tree / array that should be bound</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>oContext</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    null
-                
-                </td>
-            
-
-            <td class="description last">the context object for this databinding (optional)</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>aFilters</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">array</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    null
-                
-                </td>
-            
-
-            <td class="description last">predefined filter/s contained in an array (optional)</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>mParameters</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    null
-                
-                </td>
-            
-
-            <td class="description last">additional model specific parameters (optional)</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>aSorters</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">array</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    null
-                
-                </td>
-            
-
-            <td class="description last">predefined sap.ui.model.sorter/s contained in an array (optional)</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">sap.ui.model.TreeBinding</span>
+<span class="param-type"><a href="meteor-ui5.model.mongo.PropertyBinding.html">meteor-ui5.model.mongo.PropertyBinding</a></span>
 
 
 
@@ -1606,12 +1229,14 @@ TODO: test that this works in all likely instances
     <h4 class="name" id="createBindingContext"><span class="type-signature"></span>createBindingContext(sPath [, oContext] [, mParameters] [, fnCallBack] [, bReload])</h4>
     
     
+    <p class="summary">Create binding context.</p>
+    
 </dt>
 <dd>
 
     
     <div class="description">
-        Create binding context. (Implementation copied from ClientModel.js)
+        Implementation copied from sap.ui.model.ClientModel
     </div>
     
 
@@ -1931,15 +1556,11 @@ TODO: test that this works in all likely instances
     <h4 class="name" id="destroy"><span class="type-signature"></span>destroy()</h4>
     
     
+    <p class="summary">Destroys the model and clears the model data.</p>
+    
 </dt>
 <dd>
 
-    
-    <div class="description">
-        Destroys the model and clears the model data.
-A model implementation may override this function and perform model specific cleanup tasks e.g.
-abort requests, prevent new requests, etc.
-    </div>
     
 
     
@@ -1984,13 +1605,6 @@ abort requests, prevent new requests, etc.
 	
 
 	
-	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
-	<dd class="tag-see">
-		<ul>
-			<li>sap.ui.base.Object.prototype.destroy</li>
-			</ul>
-	</dd>
-	
 
 	
 </dl>
@@ -2018,13 +1632,11 @@ abort requests, prevent new requests, etc.
     <h4 class="name" id="destroyBindingContext"><span class="type-signature"></span>destroyBindingContext(oContext)</h4>
     
     
+    <p class="summary">Destroys a binding context</p>
+    
 </dt>
 <dd>
 
-    
-    <div class="description">
-        Implement in inheriting classes
-    </div>
     
 
     
@@ -2143,328 +1755,21 @@ abort requests, prevent new requests, etc.
             
 <hr>
 <dt>
-    <h4 class="name" id="getContext"><span class="type-signature"></span>getContext(sPath)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Gets a binding context. If context already exists, return it from the map,
-otherwise create one using the context constructor.
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>sPath</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the path</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="getObject"><span class="type-signature"></span>getObject(sPath [, oContext])</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Implement in inheriting classes
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Argument</th>
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>sPath</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">the path to where to read the object</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>oContext</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    null
-                
-                </td>
-            
-
-            <td class="description last">the context with which the path should be resolved</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
     <h4 class="name" id="getProperty"><span class="type-signature"></span>getProperty(sPath [, oContext])</h4>
     
     
+    <p class="summary">Returns the value of a property at a given path in a given context.</p>
+    
 </dt>
 <dd>
 
     
     <div class="description">
-        Implement in inheriting classes
+        Resolves a context and path and returns the value (of any
+data type).  This method also handles Lookup Property paths in the form of
+?Customers("CustomerID") where ?Customers is the Mongo collection to be
+queried and "CustomerId" is the name of the property at the current path
+that contains the unique Mongo Id of the customer document.
     </div>
     
 
@@ -2616,6 +1921,13 @@ otherwise create one using the context constructor.
 	
 
 	
+	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
+	<dd class="tag-see">
+		<ul>
+			<li>meteor-ui5.model.mongo.Model.prototype._getLookupProperty</li>
+			</ul>
+	</dd>
+	
 
 	
 </dl>
@@ -2632,6 +1944,35 @@ otherwise create one using the context constructor.
     
 
     
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">object</span>
+|
+
+<span class="param-type">Array.&lt;object></span>
+|
+
+<span class="param-type">string</span>
+|
+
+<span class="param-type">number</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
 
     
 </dd>
@@ -2640,22 +1981,19 @@ otherwise create one using the context constructor.
             
 <hr>
 <dt>
-    <h4 class="name" id="resolve"><span class="type-signature"></span>resolve(sPath [, oContext])</h4>
+    <h4 class="name" id="runQuery"><span class="type-signature"></span>runQuery(sPath, oContext [, aSorters] [, aFilters])</h4>
     
+    
+    <p class="summary">Builds and runs a Mongo query and returns a cursor</p>
     
 </dt>
 <dd>
 
     
     <div class="description">
-        Resolve the path relative to the given context.
-
-If a relative path is given (not starting with a '/') but no context,
-then the path can't be resolved and undefined is returned.
-
-For backward compatibility, the behavior of this method can be changed by
-setting the 'legacySyntax' property. Then an unresolvable, relative path
-is automatically converted into an absolute path.
+        Builds a mongo selector, sort options and runs a query on the
+database for a context and path.  It returns a cursor that changes can be
+observed on to provide reactive updates.
     </div>
     
 
@@ -2717,7 +2055,7 @@ is automatically converted into an absolute path.
 
             
 
-            <td class="description last">path to resolve</td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -2730,7 +2068,39 @@ is automatically converted into an absolute path.
             <td class="type">
             
                 
-<span class="param-type">sap.ui.core.Context</span>
+<span class="param-type">sap.ui.model.Context</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>aSorters</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
 
 
 
@@ -2751,7 +2121,41 @@ is automatically converted into an absolute path.
 
             
 
-            <td class="description last">context to resolve a relative path against</td>
+            <td class="description last">initial sort order</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>aFilters</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">predefined filter/s</td>
         </tr>
 
     
@@ -2815,7 +2219,7 @@ is automatically converted into an absolute path.
     
             
 <div class="param-desc">
-    resolved path or undefined
+    A mongo cursor
 </div>
 
 
@@ -2826,7 +2230,7 @@ is automatically converted into an absolute path.
     </dt>
     <dd>
         
-<span class="param-type">string</span>
+<span class="param-type">object</span>
 
 
 
@@ -2891,7 +2295,7 @@ is automatically converted into an absolute path.
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on 2016-08-14T10:42:45+07:00
+		on 2016-08-14T17:26:34+07:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
