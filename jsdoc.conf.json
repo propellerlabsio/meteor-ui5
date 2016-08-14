@@ -14,7 +14,7 @@
     "includeDate"           : true,
     "theme"                 : "cerulean",
     "linenums"              : true,
-    "collapseSymbols"       : true
+    "collapseSymbols"       : false
   },
   "opts": {
     "recurse": true                  // same as -r
