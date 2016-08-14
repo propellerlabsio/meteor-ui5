@@ -81,9 +81,6 @@
         DocumentListBinding
         </h2>
         
-            <div class="class-description">The DocumentListBinding is a specific binding for lists in the model, which can be used
-to populate Tables or ItemLists.</div>
-        
     
 </header>
 
@@ -97,12 +94,21 @@ to populate Tables or ItemLists.</div>
     <h4 class="name" id="DocumentListBinding"><span class="type-signature"></span>new DocumentListBinding(oModel, sPath, oContext [, aSorters] [, aFilters] [, mParameters])</h4>
     
     
+    <p class="summary">Constructor for DocumentListBinding</p>
+    
 </dt>
 <dd>
 
     
     <div class="description">
-        Constructor for DocumentListBinding
+        Provides a specialized context binding that can be used to
+bind to several documents in a Meteor Mongo Collection.  It is this type
+of ContextBinding that is used when, for example, an object header is
+bound to a path like "/Orders".  The results can be restricted via the
+aFilters parameter.
+
+Each instance of this class observes changes on a query handle to provide
+reactive updates via firing events.
     </div>
     
 
@@ -145,7 +151,7 @@ to populate Tables or ItemLists.</div>
             <td class="type">
             
                 
-<span class="param-type">sap.ui.model.Model</span>
+<span class="param-type"><a href="meteor-ui5.model.mongo.Model.html">meteor-ui5.model.mongo.Model</a></span>
 
 
 
@@ -404,7 +410,7 @@ to populate Tables or ItemLists.</div>
 
 
     <ul>
-        <li>sap.ui.model.Binding</li>
+        <li>sap.ui.model.ListBinding</li>
     </ul>
 
 
@@ -427,16 +433,96 @@ to populate Tables or ItemLists.</div>
             
 <hr>
 <dt>
-    <h4 class="name" id="filter"><span class="type-signature"></span>filter(aFilters, sFilterType)</h4>
+    <h4 class="name" id="destroy"><span class="type-signature"></span>destroy()</h4>
     
+    
+    <p class="summary">Clean-up no longer needed resources when this context binding is
+destroyed.</p>
     
 </dt>
 <dd>
 
     
     <div class="description">
-        Filters the list according to the filter definitions
+        Stop observing changes in the existing query or it will run
+forever.
     </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="filter"><span class="type-signature"></span>filter(aFilters, sFilterType)</h4>
+    
+    
+    <p class="summary">Filters the list according to the filter definitions</p>
+    
+</dt>
+<dd>
+
     
 
     
@@ -606,15 +692,15 @@ to populate Tables or ItemLists.</div>
     <h4 class="name" id="getContexts"><span class="type-signature">&lt;protected> </span>getContexts( [iStartIndex] [, iLength])</h4>
     
     
+    <p class="summary">Returns an array of binding contexts for the bound target list.</p>
+    
 </dt>
 <dd>
 
     
     <div class="description">
-        Returns an array of binding contexts for the bound target list.
-
-<strong>Note:</strong>The public usage of this method is deprecated, as calls from outside of controls will lead
-to unexpected side effects. For avoidance use meteor-ui5.model.mongo.DocumentListBinding.prototype.getCurrentContexts
+        <strong>Note:</strong>The parent class method documentation
+indicates tht public usage of this method is deprecated use meteor-ui5.model.mongo.DocumentListBinding.prototype.getCurrentContexts
 instead.
     </div>
     
@@ -742,119 +828,6 @@ instead.
 
 	
 
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    the array of contexts for each row of the bound list
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;sap.ui.model.Context></span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="getCurrentContexts"><span class="type-signature"></span>getCurrentContexts()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Returns an array of currently used binding contexts of the bound control
-
-This method does not trigger any data requests from the backend or delta calculation, but just returns the context
-array as last requested by the control. This can be used by the application to get access to the data currently
-displayed by a list control.
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-	<dt class="tag-since method-doc-label method-doc-details-label">Since:</dt>
-	<dd class="tag-since">
-		<ul class="dummy">
-			<li>1.28</li>
-		</ul>
-	</dd>
 	
 
 	
@@ -1087,12 +1060,14 @@ displayed by a list control.
     <h4 class="name" id="getLength"><span class="type-signature"></span>getLength()</h4>
     
     
+    <p class="summary">Returns the number of entries in the list.</p>
+    
 </dt>
 <dd>
 
     
     <div class="description">
-        Returns the number of entries in the list. This might be an estimated or preliminary length, in case
+        This might be an estimated or preliminary length, in case
 the full length is not known yet, see method isLengthFinal().
     </div>
     
@@ -1110,13 +1085,6 @@ the full length is not known yet, see method isLengthFinal().
 
 	
 
-	
-	<dt class="tag-since method-doc-label method-doc-details-label">Since:</dt>
-	<dd class="tag-since">
-		<ul class="dummy">
-			<li>1.24</li>
-		</ul>
-	</dd>
 	
 
 	
@@ -1197,13 +1165,16 @@ the full length is not known yet, see method isLengthFinal().
     <h4 class="name" id="isLengthFinal"><span class="type-signature"></span>isLengthFinal()</h4>
     
     
+    <p class="summary">Returns whether the length of the list is final</p>
+    
 </dt>
 <dd>
 
     
     <div class="description">
-        Returns whether the length which can be retrieved using getLength() is a known, final length,
-or an preliminary or estimated length which may change if further data is requested.
+        Returns whether the length which can be retrieved using getLength()
+is a known, final length, or an preliminary or estimated length which may
+change if further data is requested.
     </div>
     
 
@@ -1220,13 +1191,6 @@ or an preliminary or estimated length which may change if further data is reques
 
 	
 
-	
-	<dt class="tag-since method-doc-label method-doc-details-label">Since:</dt>
-	<dd class="tag-since">
-		<ul class="dummy">
-			<li>1.24</li>
-		</ul>
-	</dd>
 	
 
 	
@@ -1507,7 +1471,7 @@ or an preliminary or estimated length which may change if further data is reques
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on 2016-08-14T09:48:10+07:00
+		on 2016-08-14T10:42:45+07:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

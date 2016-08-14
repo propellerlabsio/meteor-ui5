@@ -25,7 +25,7 @@ sap.ui.define([
      * @alias meteor-ui5.model.mongo.ContextBinding
      * @extends sap.ui.model.ContextBinding
      */
-    var cContextBinding = ContextBinding.extend("meteor-ui5.model.mongo.ContextBinding",  {
+    var cContextBinding = ContextBinding.extend("meteor-ui5.model.mongo.ContextBinding", {
 
       constructor: function(oModel, sPath, oContext, mParameters, oEvents) {
         // Call super constructor

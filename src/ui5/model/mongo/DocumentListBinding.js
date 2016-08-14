@@ -1,10 +1,3 @@
-/*!
-
- * ${copyright}
- */
-
-
-// Provides an abstraction for list bindings
 sap.ui.define([
   'jquery.sap.global',
   'sap/ui/model/ListBinding',
@@ -15,13 +8,19 @@ sap.ui.define([
   "use strict";
 
   /**
-   * Constructor for DocumentListBinding
+   * @summary Constructor for DocumentListBinding
    *
    * @class
-   * The DocumentListBinding is a specific binding for lists in the model, which can be used
-   * to populate Tables or ItemLists.
+   * @description Provides a specialized context binding that can be used to
+   * bind to several documents in a Meteor Mongo Collection.  It is this type
+   * of ContextBinding that is used when, for example, an object header is
+   * bound to a path like "/Orders".  The results can be restricted via the
+   * aFilters parameter.
    *
-   * @param {sap.ui.model.Model} oModel
+   * Each instance of this class observes changes on a query handle to provide
+   * reactive updates via firing events.
+   *
+   * @param {meteor-ui5.model.mongo.Model} oModel
    * @param {string} sPath
    * @param {sap.ui.model.Context} oContext
    * @param {array} [aSorters] initial sort order (can be either a sorter or an array of sorters)
@@ -30,7 +29,7 @@ sap.ui.define([
    *
    * @public
    * @alias meteor-ui5.model.mongo.DocumentListBinding
-   * @extends sap.ui.model.Binding
+   * @extends sap.ui.model.ListBinding
    */
   var cDocumentListBinding = ListBinding.extend("meteor-ui5.model.mongo.DocumentListBinding", {
 
@@ -47,46 +46,12 @@ sap.ui.define([
 
   });
 
-  cDocumentListBinding.prototype._runQuery = function() {
-    // Stop observing changes in any existing query.  Will run forever otherwise.
-    if (this._oQueryHandle) {
-      this._oQueryHandle.stop();
-    }
-
-    // Reset existing contexts
-    this._aContexts = [];
-    this._fireChange(ChangeReason.remove);
-
-    // Run query
-    const oCursor = this.oModel.runQuery(this.sPath, this.oContext, this.aSorters, this.aApplicationFilters);
-
-    // Create query handle so we can observe changes
-    // var that = this;
-    this._oQueryHandle = oCursor.observeChanges({
-      addedBefore: (id, fields, before) => {
-        const oContext = new Context(this.oModel, this.sPath + "(" + id + ")");
-        this._aContexts.push(oContext);
-        this.fireDataReceived();
-        this._fireChange(ChangeReason.add);
-      },
-
-      changed: (id, fields) => {
-        //TODO performance - work out how to only update data that has changed
-        this.oModel.refresh();
-      },
-
-      removed: (id) => {
-        //TODO performance - work out how to only update data that has changed
-        this.oModel.refresh();
-      }
-    });
-  }
 
   /**
-   * Returns an array of binding contexts for the bound target list.
+   * @summary Returns an array of binding contexts for the bound target list.
    *
-   * <strong>Note:</strong>The public usage of this method is deprecated, as calls from outside of controls will lead
-   * to unexpected side effects. For avoidance use {@link meteor-ui5.model.mongo.DocumentListBinding.prototype.getCurrentContexts}
+   * @description <strong>Note:</strong>The parent class method documentation
+   * indicates tht public usage of this method is deprecated use {@link meteor-ui5.model.mongo.DocumentListBinding.prototype.getCurrentContexts}
    * instead.
    *
    * @function
@@ -109,6 +74,14 @@ sap.ui.define([
     return this._aContexts.slice(iStart).splice(0, iLen);
   };
 
+    /**
+     * @summary Clean-up no longer needed resources when this context binding is
+     * destroyed.
+     *
+     * @description Stop observing changes in the existing query or it will run
+     * forever.
+     * @public
+     */
   cDocumentListBinding.prototype.destroy = function() {
     // Call stop on queryHandle on destroy of meteor model per docs:
     // "observeChanges returns a live query handle, which is an object with a
@@ -120,10 +93,9 @@ sap.ui.define([
   };
 
   /**
-   * Filters the list according to the filter definitions
+   * @summary Filters the list according to the filter definitions
    *
    * @function
-   * @name meteor-ui5.model.mongo.DocumentListBinding.prototype.filter
    * @param {object[]} aFilters Array of filter objects
    * @param {sap.ui.model.FilterType} sFilterType Type of the filter which should be adjusted, if it is not given, the standard behaviour applies
    * @return {meteor-ui5.model.mongo.DocumentListBinding} returns <code>this</code> to facilitate method chaining
@@ -142,13 +114,14 @@ sap.ui.define([
 
     // Re-run query
     this._runQuery();
+
+    return this;
   };
 
   /**
    * Sorts the list according to the sorter object
    *
    * @function
-   * @name meteor-ui5.model.mongo.DocumentListBinding.prototype.sort
    * @param {sap.ui.model.Sorter|Array} aSorters the Sorter object or an array of sorters which defines the sort order
    * @return {meteor-ui5.model.mongo.DocumentListBinding} returns <code>this</code> to facilitate method chaining
    * @public
@@ -159,29 +132,17 @@ sap.ui.define([
 
     // Re-run query
     this._runQuery();
+
+    return this;
   };
 
   /**
-   * Returns an array of currently used binding contexts of the bound control
+   * @summary Returns the number of entries in the list.
    *
-   * This method does not trigger any data requests from the backend or delta calculation, but just returns the context
-   * array as last requested by the control. This can be used by the application to get access to the data currently
-   * displayed by a list control.
-   *
-   * @return {sap.ui.model.Context[]} the array of contexts for each row of the bound list
-   * @since 1.28
-   * @public
-   */
-  cDocumentListBinding.prototype.getCurrentContexts = function() {
-    return this._aContexts;
-  };
-
-  /**
-   * Returns the number of entries in the list. This might be an estimated or preliminary length, in case
+   * @description This might be an estimated or preliminary length, in case
    * the full length is not known yet, see method isLengthFinal().
    *
    * @return {int} returns the number of entries in the list
-   * @since 1.24
    * @public
    */
   cDocumentListBinding.prototype.getLength = function() {
@@ -189,11 +150,13 @@ sap.ui.define([
   };
 
   /**
-   * Returns whether the length which can be retrieved using getLength() is a known, final length,
-   * or an preliminary or estimated length which may change if further data is requested.
+   * @summary Returns whether the length of the list is final
+   *
+   * @description Returns whether the length which can be retrieved using getLength()
+   * is a known, final length, or an preliminary or estimated length which may
+   * change if further data is requested.
    *
    * @return {boolean} returns whether the length is final
-   * @since 1.24
    * @public
    */
   cDocumentListBinding.prototype.isLengthFinal = function() {
@@ -247,6 +210,48 @@ sap.ui.define([
       this.update();
     }
   };
+
+  /**
+   * @summary Execute Mongo query for current path and context and observe changes.
+   *
+   * @description This method runs the query for this context binding and provides
+   * reactivity by observing changes in the query and firing events on change.
+   * @private
+   */
+  cDocumentListBinding.prototype._runQuery = function() {
+    // Stop observing changes in any existing query.  Will run forever otherwise.
+    if (this._oQueryHandle) {
+      this._oQueryHandle.stop();
+    }
+
+    // Reset existing contexts
+    this._aContexts = [];
+    this._fireChange(ChangeReason.remove);
+
+    // Run query
+    const oCursor = this.oModel.runQuery(this.sPath, this.oContext, this.aSorters, this.aApplicationFilters);
+
+    // Create query handle so we can observe changes
+    // var that = this;
+    this._oQueryHandle = oCursor.observeChanges({
+      addedBefore: (id, fields, before) => {
+        const oContext = new Context(this.oModel, this.sPath + "(" + id + ")");
+        this._aContexts.push(oContext);
+        this.fireDataReceived();
+        this._fireChange(ChangeReason.add);
+      },
+
+      changed: (id, fields) => {
+        //TODO performance - work out how to only update data that has changed
+        this.oModel.refresh();
+      },
+
+      removed: (id) => {
+        //TODO performance - work out how to only update data that has changed
+        this.oModel.refresh();
+      }
+    });
+  }
 
   return cDocumentListBinding;
 
