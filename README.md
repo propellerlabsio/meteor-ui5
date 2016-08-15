@@ -37,7 +37,7 @@ To use your local version of the code in a meteor project:
 
 ### v0.1 - currently under construction
 
-1. Clean up & complete jsdoc comments in all code.
+1. Build Meteor UI5 version of accounts-ui for integration with unified shell. (Needed for tutorial that will roughly follow Meteor Blaze tutorial)
 1. [Open v0.1 milestone issues](https://github.com/propellerlabsio/meteor-ui5/issues?q=is%3Aopen+is%3Aissue+milestone%3Av0.1)
 
 ### v0.2+
@@ -47,12 +47,17 @@ To use your local version of the code in a meteor project:
 1. Add support for two-way binding (requires allow write to collections - not Meteor best practice which is update via method).
 1. Add support for paging.  UI5 instantiates multiple control objects for every record in a list.  Need to limit the amount of front-end memory consumed when paging through large lists.
 1. Incorporate UI5 webapp into meteor build process.
-1. Build Meteor UI5 version of accounts-ui for integration with unified shell.
 1. Add tests
 
 ### Maybe
 
 1. Add TreeBinding model
+
+## Version history
+| Version | Description |
+| ---- | ------- |
+| `0.0.1` | Initial version that was a demo hack based on a copy of the standard JSONModel.  While it worked, the approach was wrong for two reasons: It stored document data in the model instances - unnecessary and not performant - and it also had a new model created for each subscription and cursor (query). |
+| `0.1.0` | **Breaking changes** Bottom up build of a completely new model that addresses shortcomings of previous approach. |
 
 ## License
 This software is licensed under the Apache License, Version 2.0 - see LICENSE.txt
