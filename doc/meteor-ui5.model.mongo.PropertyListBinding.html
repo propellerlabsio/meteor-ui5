@@ -76,13 +76,10 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="meteor-ui5.model.mongo.html">.mongo</a>.</span>
+            <span class="ancestors"><a href="meteor-ui5.model.mongo.html">meteor-ui5.model.mongo</a>.</span>
         
         PropertyListBinding
         </h2>
-        
-            <div class="class-description">The PropertyListBinding is a specific binding for lists in the model, which can be used
-to populate Tables or ItemLists.</div>
         
     
 </header>
@@ -97,12 +94,18 @@ to populate Tables or ItemLists.</div>
     <h4 class="name" id="PropertyListBinding"><span class="type-signature"></span>new PropertyListBinding(oModel, sPath, oContext [, aSorters] [, aFilters] [, mParameters])</h4>
     
     
+    <p class="summary">Constructor for PropertyListBinding</p>
+    
 </dt>
 <dd>
 
     
     <div class="description">
-        Constructor for PropertyListBinding
+        Provides a specialized context binding that can be used to
+bind to a Mongo document property that is an array .
+
+Note: Sorting and filtering have not been implemented yet (v0.1).  This is
+planned for (v0.2).
     </div>
     
 
@@ -145,7 +148,7 @@ to populate Tables or ItemLists.</div>
             <td class="type">
             
                 
-<span class="param-type">sap.ui.model.Model</span>
+<span class="param-type"><a href="meteor-ui5.model.mongo.Model.html">meteor-ui5.model.mongo.Model</a></span>
 
 
 
@@ -262,7 +265,7 @@ to populate Tables or ItemLists.</div>
 
             
 
-            <td class="description last">initial sort order (can be either a sorter or an array of sorters)</td>
+            <td class="description last">Not supported yet</td>
         </tr>
 
     
@@ -296,7 +299,7 @@ to populate Tables or ItemLists.</div>
 
             
 
-            <td class="description last">predefined filter/s (can be either a filter or an array of filters)</td>
+            <td class="description last">Not supported yet</td>
         </tr>
 
     
@@ -404,7 +407,7 @@ to populate Tables or ItemLists.</div>
 
 
     <ul>
-        <li>sap.ui.model.Binding</li>
+        <li>sap.ui.model.ListBinding</li>
     </ul>
 
 
@@ -427,15 +430,100 @@ to populate Tables or ItemLists.</div>
             
 <hr>
 <dt>
-    <h4 class="name" id="filter"><span class="type-signature"></span>filter(aFilters, sFilterType)</h4>
+    <h4 class="name" id="destroy"><span class="type-signature"></span>destroy()</h4>
     
+    
+    <p class="summary">Clean-up no longer needed resources when this context binding is
+destroyed.</p>
     
 </dt>
 <dd>
 
     
     <div class="description">
-        Filters the list according to the filter definitions
+        Stop observing changes in the existing query or it will run
+forever.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="filter"><span class="type-signature"></span>filter(aFilters, sFilterType)</h4>
+    
+    
+    <p class="summary">Filters the list according to the filter definitions</p>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <strong>Note:</strong>Support this feature has not been
+implemented yet in this model.
     </div>
     
 
@@ -611,10 +699,8 @@ to populate Tables or ItemLists.</div>
 
     
     <div class="description">
-        Returns an array of binding contexts for the bound target list.
-
-<strong>Note:</strong>The public usage of this method is deprecated, as calls from outside of controls will lead
-to unexpected side effects. For avoidance use meteor-ui5.model.mongo.PropertyListBinding.prototype.getCurrentContexts
+        <strong>Note:</strong>The parent class method documentation
+indicates tht public usage of this method is deprecated use meteor-ui5.model.mongo.PropertyListBinding.prototype.getCurrentContexts
 instead.
     </div>
     
@@ -849,13 +935,6 @@ displayed by a list control.
 	
 
 	
-	<dt class="tag-since method-doc-label method-doc-details-label">Since:</dt>
-	<dd class="tag-since">
-		<ul class="dummy">
-			<li>1.28</li>
-		</ul>
-	</dd>
-	
 
 	
 
@@ -935,12 +1014,15 @@ displayed by a list control.
     <h4 class="name" id="getDistinctValues"><span class="type-signature"></span>getDistinctValues(sPath)</h4>
     
     
+    <p class="summary">Returns list of distinct values for the given relative binding path</p>
+    
 </dt>
 <dd>
 
     
     <div class="description">
-        Returns list of distinct values for the given relative binding path
+        <strong>Note:</strong>Support this feature has not been implemented
+yet in this model.
     </div>
     
 
@@ -1087,12 +1169,14 @@ displayed by a list control.
     <h4 class="name" id="getLength"><span class="type-signature"></span>getLength()</h4>
     
     
+    <p class="summary">Returns the number of entries in the list.</p>
+    
 </dt>
 <dd>
 
     
     <div class="description">
-        Returns the number of entries in the list. This might be an estimated or preliminary length, in case
+        This might be an estimated or preliminary length, in case
 the full length is not known yet, see method isLengthFinal().
     </div>
     
@@ -1110,13 +1194,6 @@ the full length is not known yet, see method isLengthFinal().
 
 	
 
-	
-	<dt class="tag-since method-doc-label method-doc-details-label">Since:</dt>
-	<dd class="tag-since">
-		<ul class="dummy">
-			<li>1.24</li>
-		</ul>
-	</dd>
 	
 
 	
@@ -1197,13 +1274,19 @@ the full length is not known yet, see method isLengthFinal().
     <h4 class="name" id="isLengthFinal"><span class="type-signature"></span>isLengthFinal()</h4>
     
     
+    <p class="summary">Returns whether the length of the list is final</p>
+    
 </dt>
 <dd>
 
     
     <div class="description">
-        Returns whether the length which can be retrieved using getLength() is a known, final length,
-or an preliminary or estimated length which may change if further data is requested.
+        Returns whether the length which can be retrieved using getLength()
+is a known, final length, or an preliminary or estimated length which may
+change if further data is requested.
+
+<strong>Note:</strong>Support this feature has not been implemented yet in
+this model.
     </div>
     
 
@@ -1220,13 +1303,6 @@ or an preliminary or estimated length which may change if further data is reques
 
 	
 
-	
-	<dt class="tag-since method-doc-label method-doc-details-label">Since:</dt>
-	<dd class="tag-since">
-		<ul class="dummy">
-			<li>1.24</li>
-		</ul>
-	</dd>
 	
 
 	
@@ -1307,12 +1383,15 @@ or an preliminary or estimated length which may change if further data is reques
     <h4 class="name" id="sort"><span class="type-signature"></span>sort(aSorters)</h4>
     
     
+    <p class="summary">Sorts the list according to the sorter object</p>
+    
 </dt>
 <dd>
 
     
     <div class="description">
-        Sorts the list according to the sorter object
+        <strong>Note:</strong>Support this feature has not been
+implemented yet in this model.
     </div>
     
 
@@ -1507,7 +1586,7 @@ or an preliminary or estimated length which may change if further data is reques
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on 2016-08-14T17:26:34+07:00
+		on 2016-08-15T12:30:03+07:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

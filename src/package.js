@@ -1,8 +1,10 @@
 /**
- * The Meteor UI5 package
+ * @file package.js
+ * @copyright PropellerLabs.io 2016
+ * @license Apache-2.0
  *
  * @namespace meteor-ui5
- *
+ * @description The Meteor UI5 package
  */
 
 Package.describe({

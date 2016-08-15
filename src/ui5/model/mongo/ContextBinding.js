@@ -1,3 +1,8 @@
+/**
+ * @file meteor-ui5.model.mongo.ContextBinding.js
+ * @copyright PropellerLabs.io 2016
+ * @license Apache-2.0
+ */
 sap.ui.define([
     'sap/ui/model/ContextBinding',
     'sap/ui/model/ChangeReason'

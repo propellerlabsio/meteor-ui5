@@ -1,8 +1,11 @@
 /**
- * Meteor UI5 Mongo Model
+ * @file meteor-ui5.model.mongo.Model.js
+ * @copyright PropellerLabs.io 2016
+ * @license Apache-2.0
+ *
  * @namespace meteor-ui5.model.mongo
+ * @description Meteor UI5 Mongo Model
  */
-
 sap.ui.define([
   'jquery.sap.global',
   'sap/ui/model/Model',
@@ -68,7 +71,6 @@ sap.ui.define([
   /**
    * Return new PropertyBinding for given parameters
    *
-   * @function
    * @param {string}
    *         sPath the path pointing to the property that should be bound
    * @param {object}
@@ -91,7 +93,6 @@ sap.ui.define([
    * depending on whether we are binding to a list of documents or an array
    * property in a single document.
    *
-   * @function
    * @param {string}
    *         sPath the path pointing to the list / array that should be bound
    * @param {object}
@@ -122,7 +123,6 @@ sap.ui.define([
   /**
    * @summary Tree binding not yet implemented.
    *
-   * @function
    * @param {string}
    *         sPath the path pointing to the tree / array that should be bound
    * @param {object}
@@ -145,7 +145,6 @@ sap.ui.define([
    *
    * @description Implementation copied from sap.ui.model.ClientModel
    *
-   * @function
    * @param {string}
    *         sPath the path to create the new context from
    * @param {object}
@@ -186,7 +185,6 @@ sap.ui.define([
   /**
    * @summary Destroys a binding context
    *
-   * @function
    * @param {object}
    *         oContext to destroy
    * @public
@@ -207,7 +205,6 @@ sap.ui.define([
    * that contains the unique Mongo Id of the customer document.
    * @see meteor-ui5.model.mongo.Model.prototype._getLookupProperty
    *
-   * @function
    * @param {string}
    *         sPath the path to where to read the attribute value
    * @param {object}
@@ -258,7 +255,6 @@ sap.ui.define([
    * queried and "CustomerId" is the name of the property in the current document
    * that contains the unique Mongo Id of the customer document.
    *
-   * @function
    * @param {object}
    *		   oCurrentDocument the document containing the id of the lookup document
    * @param {string}
@@ -428,7 +424,6 @@ sap.ui.define([
   /**
    * @summary Creates a new ContextBinding
    *
-   * @function
    * @param {string | object}
    *         sPath the path pointing to the property that should be bound or an object
    *         which contains the following parameter properties: path, context, parameters

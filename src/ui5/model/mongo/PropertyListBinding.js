@@ -1,10 +1,8 @@
-/*!
-
- * ${copyright}
+/**
+ * @file meteor-ui5.model.mongo.PropertyListBinding.js
+ * @copyright PropellerLabs.io 2016
+ * @license Apache-2.0
  */
-
-
-// Provides an abstraction for list bindings
 sap.ui.define([
   'jquery.sap.global',
   'sap/ui/model/ListBinding',
@@ -14,22 +12,25 @@ sap.ui.define([
   "use strict";
 
   /**
-   * Constructor for PropertyListBinding
+   * @summary Constructor for PropertyListBinding
    *
    * @class
-   * The PropertyListBinding is a specific binding for lists in the model, which can be used
-   * to populate Tables or ItemLists.
+   * @description Provides a specialized context binding that can be used to
+   * bind to a Mongo document property that is an array .
    *
-   * @param {sap.ui.model.Model} oModel
+   * Note: Sorting and filtering have not been implemented yet (v0.1).  This is
+   * planned for (v0.2).
+   *
+   * @param {meteor-ui5.model.mongo.Model} oModel
    * @param {string} sPath
    * @param {sap.ui.model.Context} oContext
-   * @param {array} [aSorters] initial sort order (can be either a sorter or an array of sorters)
-   * @param {array} [aFilters] predefined filter/s (can be either a filter or an array of filters)
+   * @param {array} [aSorters] Not supported yet
+   * @param {array} [aFilters] Not supported yet
    * @param {object} [mParameters]
    *
    * @public
    * @alias meteor-ui5.model.mongo.PropertyListBinding
-   * @extends sap.ui.model.Binding
+   * @extends sap.ui.model.ListBinding
    */
   var cPropertyListBinding = ListBinding.extend("meteor-ui5.model.mongo.PropertyListBinding", {
 
@@ -40,12 +41,29 @@ sap.ui.define([
       // Set up array for storing contexts
       this._aContexts = [];
 
+      // Validate filtering and sorting hasn't been requested - not supported yet.
+      if (this.aSorters.length || this.aApplicationFilters.length) {
+        const sError = "Sorting and filtering not supported yet for binding to arrays.";
+        jQuery.sap.log.fatal(sError);
+        this.fireRequestFailed({
+          message: sError
+        });
+        return;
+      }
+
       // Build and run query
       this._runQuery();
     }
 
   });
 
+  /**
+   * @summary Execute Mongo query for current path and context and observe changes.
+   *
+   * @description This method runs the query for this context binding and provides
+   * reactivity by observing changes in the query and firing events on change.
+   * @private
+   */
   cPropertyListBinding.prototype._runQuery = function() {
     // Stop observing changes in any existing query.  Will run forever otherwise.
     if (this._oQueryHandle) {
@@ -82,12 +100,10 @@ sap.ui.define([
   /**
    * Returns an array of binding contexts for the bound target list.
    *
-   * <strong>Note:</strong>The public usage of this method is deprecated, as calls from outside of controls will lead
-   * to unexpected side effects. For avoidance use {@link meteor-ui5.model.mongo.PropertyListBinding.prototype.getCurrentContexts}
+   * @description <strong>Note:</strong>The parent class method documentation
+   * indicates tht public usage of this method is deprecated use {@link meteor-ui5.model.mongo.PropertyListBinding.prototype.getCurrentContexts}
    * instead.
    *
-   * @function
-   * @name meteor-ui5.model.mongo.PropertyListBinding.prototype.getContexts
    * @param {int} [iStartIndex=0] the startIndex where to start the retrieval of contexts
    * @param {int} [iLength=length of the list] determines how many contexts to retrieve beginning from the start index.
    * @return {sap.ui.model.Context[]} the array of contexts for each row of the bound list
@@ -103,16 +119,16 @@ sap.ui.define([
     this._aContexts = [];
     var oDocument = this._oCursor.fetch()[0];
     var aProperty = _.get(oDocument, this.sPath);
-    if (!Array.isArray(aProperty)){
+    if (!Array.isArray(aProperty)) {
       //TODO use standard UI5 error handling here
       console.error(this.sPath + " is not an array.");
     } else {
-        aProperty.forEach((value, index) => {
-          // Create context
-          var sPath = this.oContext.sPath + "/" + this.sPath + "[" + index + "]"
-          const oContext = new Context(this.oModel, sPath);
-          this._aContexts.push(oContext);
-        })
+      aProperty.forEach((value, index) => {
+        // Create context
+        var sPath = this.oContext.sPath + "/" + this.sPath + "[" + index + "]"
+        const oContext = new Context(this.oModel, sPath);
+        this._aContexts.push(oContext);
+      })
     }
 
 
@@ -121,21 +137,26 @@ sap.ui.define([
     return this._aContexts.slice(iStart).splice(0, iLen);
   };
 
+  /**
+   * @summary Clean-up no longer needed resources when this context binding is
+   * destroyed.
+   *
+   * @description Stop observing changes in the existing query or it will run
+   * forever.
+   * @public
+   */
   cPropertyListBinding.prototype.destroy = function() {
-    // Call stop on queryHandle on destroy of meteor model per docs:
-    // "observeChanges returns a live query handle, which is an object with a
-    // stop method. Call stop with no arguments to stop calling the callback functions
-    // and tear down the query. The query will run forever until you call this. "
     if (this._oQueryHandle) {
       this._oQueryHandle.stop();
     }
   };
 
   /**
-   * Filters the list according to the filter definitions
+   * @summary Filters the list according to the filter definitions
    *
-   * @function
-   * @name meteor-ui5.model.mongo.PropertyListBinding.prototype.filter
+   * @description <strong>Note:</strong>Support this feature has not been
+   * implemented yet in this model.
+   *
    * @param {object[]} aFilters Array of filter objects
    * @param {sap.ui.model.FilterType} sFilterType Type of the filter which should be adjusted, if it is not given, the standard behaviour applies
    * @return {meteor-ui5.model.mongo.PropertyListBinding} returns <code>this</code> to facilitate method chaining
@@ -143,28 +164,31 @@ sap.ui.define([
    * @public
    */
   cPropertyListBinding.prototype.filter = function(aFilters, sFilterType) {
-    // Replace contents of aFilters property
-    this.aApplicationFilters = aFilters;
-
-    // Re-run query
-    this._runQuery();
+    const sError = "Sorting and filtering not supported yet for binding to arrays.";
+    jQuery.sap.log.fatal(sError);
+    this.fireRequestFailed({
+      message: sError
+    });
+    return this;
   };
 
   /**
-   * Sorts the list according to the sorter object
+   * @summary Sorts the list according to the sorter object
    *
-   * @function
-   * @name meteor-ui5.model.mongo.PropertyListBinding.prototype.sort
+   * @description <strong>Note:</strong>Support this feature has not been
+   * implemented yet in this model.
+   *
    * @param {sap.ui.model.Sorter|Array} aSorters the Sorter object or an array of sorters which defines the sort order
    * @return {meteor-ui5.model.mongo.PropertyListBinding} returns <code>this</code> to facilitate method chaining
    * @public
    */
   cPropertyListBinding.prototype.sort = function(aSorters) {
-    // Replace contents of aSorters property
-    Array.isArray(aSorters) ? this.aSorters = aSorters : this.aSorters = [aSorters];
-
-    // Re-run query
-    this._runQuery();
+    const sError = "Sorting and filtering not supported yet for binding to arrays.";
+    jQuery.sap.log.fatal(sError);
+    this.fireRequestFailed({
+      message: sError
+    });
+    return this;
   };
 
   /**
@@ -175,7 +199,6 @@ sap.ui.define([
    * displayed by a list control.
    *
    * @return {sap.ui.model.Context[]} the array of contexts for each row of the bound list
-   * @since 1.28
    * @public
    */
   cPropertyListBinding.prototype.getCurrentContexts = function() {
@@ -183,11 +206,12 @@ sap.ui.define([
   };
 
   /**
-   * Returns the number of entries in the list. This might be an estimated or preliminary length, in case
+   * @summary Returns the number of entries in the list.
+   *
+   * @description This might be an estimated or preliminary length, in case
    * the full length is not known yet, see method isLengthFinal().
    *
    * @return {int} returns the number of entries in the list
-   * @since 1.24
    * @public
    */
   cPropertyListBinding.prototype.getLength = function() {
@@ -195,11 +219,16 @@ sap.ui.define([
   };
 
   /**
-   * Returns whether the length which can be retrieved using getLength() is a known, final length,
-   * or an preliminary or estimated length which may change if further data is requested.
+   * @summary Returns whether the length of the list is final
+   *
+   * @description Returns whether the length which can be retrieved using getLength()
+   * is a known, final length, or an preliminary or estimated length which may
+   * change if further data is requested.
+   *
+   * <strong>Note:</strong>Support this feature has not been implemented yet in
+   * this model.
    *
    * @return {boolean} returns whether the length is final
-   * @since 1.24
    * @public
    */
   cPropertyListBinding.prototype.isLengthFinal = function() {
@@ -215,7 +244,10 @@ sap.ui.define([
   };
 
   /**
-   * Returns list of distinct values for the given relative binding path
+   * @summary Returns list of distinct values for the given relative binding path
+   *
+   * @description <strong>Note:</strong>Support this feature has not been implemented
+   * yet in this model.
    *
    * @param {string} sPath the relative binding path
    * @return {Array} the array of distinct values.
@@ -225,33 +257,6 @@ sap.ui.define([
   cPropertyListBinding.prototype.getDistinctValues = function(sPath) {
     // TODO what's supposed to go here?
     return null;
-  };
-
-  /**
-   * Enable extended change detection
-   *
-   * @param {boolean} bDetectUpdates Whether changes within the same entity should cause a delete and insert command
-   * @param {function|string} vKey The path of the property containing the key or a function getting the context as only parameter to calculate a key to identify an entry
-   * @private
-   */
-  cPropertyListBinding.prototype.enableExtendedChangeDetection = function(bDetectUpdates, vKey) {
-
-    // TODO: BELOW CODE HAS BEEN COPIED VERBATIM FROM 'sap/ui/model/ListBinding'
-    // DON'T KNOW HOW IT WORKS AND WHAT IT IS SUPPOSED TO DO SO HOISTING INTO THIS CLASS
-    // TO OBSERVE IT. REPLACE OR DELETE IT WHEN ITS UNDERSTOOD
-
-    this.bUseExtendedChangeDetection = true;
-    this.bDetectUpdates = bDetectUpdates;
-    if (typeof vKey === "string") {
-      this.fnGetEntryKey = function(oContext) {
-        return oContext.getProperty(vKey);
-      };
-    } else if (typeof vKey === "function") {
-      this.fnGetEntryKey = vKey;
-    }
-    if (this.update) {
-      this.update();
-    }
   };
 
   return cPropertyListBinding;
