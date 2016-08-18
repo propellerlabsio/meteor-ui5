@@ -12,11 +12,13 @@ Please see the [Meteor Ui5 website](http://meteor-ui5.propellerlabs.io) for docu
 * [Quickstart guide](http://meteor-ui5.propellerlabs.io/#/docs/quickstart)
 * [Tutorial](http://meteor-ui5.propellerlabs.io/#/tutorial)
 
-## Building
+## Contributing
+
+### Cloning and building
 1. After cloning the repo, run `npm install` to install build dependencies.
 1. Run `npm run-script build` after making any changes to files in the `src/` directory. This will rebuild the `dist/` files and the documentation.  Meteor's own build tool will handle everything after that.
 
-## Project folder structure
+### Project folder structure
 | Path | Purpose |
 | ---- | ------- |
 | `dist`† | The contents of the meteor package as built by the Grunt tool.   |
@@ -27,7 +29,7 @@ Please see the [Meteor Ui5 website](http://meteor-ui5.propellerlabs.io) for docu
 | `temp`† | Temporary build process area. |
  **† WARNING!** Do not make manual changes in these folders as they will be overwritten by the build process.
 
-## Running your copy of this repo
+### Running your copy of the code
 To use your local version of the code in a meteor project:
 1. Create a `packages` folder in the root of your meteor project
 1. In that folder create a symbolic link to the `dist` folder in this repo - e.g. `ln -s ~/git/meteor-ui5/dist meteor-ui5`
