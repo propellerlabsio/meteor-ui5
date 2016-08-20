@@ -207,9 +207,10 @@ sap.ui.define([
       addedBefore: (id, fields, before) => {
         // Allow for Mongo ID's that are objects - etc ObjectId("12345")
         const sDocumentId = id.toString();
+        const sPath = this.sPath + "(" + sDocumentId + ")";
 
         // Create context
-        const oContext = new Context(this.oModel, this.sPath + "(" + sDocumentId + ")");
+        const oContext = new Context(this.oModel, sPath);
         this._aContexts.push(oContext);
         this.fireDataReceived();
         this._fireChange(ChangeReason.add);
@@ -221,6 +222,14 @@ sap.ui.define([
       },
 
       removed: (id) => {
+        // Remove context for document
+        const sDocumentId = id.toString();
+        const sPath = this.sPath + "(" + sDocumentId + ")";
+        const iContextIndex = this._aContexts.findIndex((oContext)=>{
+            return oContext.sPath === sPath;
+        })
+        this._aContexts.splice(iContextIndex, 1);
+
         //TODO performance - work out how to only update data that has changed
         this.oModel.refresh();
       }
