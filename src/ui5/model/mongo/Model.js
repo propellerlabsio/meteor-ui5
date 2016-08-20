@@ -349,10 +349,32 @@ sap.ui.define([
       // No document id - whole component is collection name
       oComponents.collectionName = sCollectionComponent;
     } else {
-      // Get collection name and document id
-      const closeParens = sCollectionComponent.indexOf(")");
+      // Get collection name
       oComponents.collectionName = sCollectionComponent.substring(0, openParens);
-      oComponents.documentId = sCollectionComponent.substring(openParens + 1, closeParens);
+
+      // Get document id which will either be a string (created by Meteor) or
+      // and ObjectId constructor (created by Mongo via mongo shell, robomongo
+      // external database etc)
+      const sComponentRemaining = sCollectionComponent.substring(openParens);
+      const iOuterParensBegin = 0;
+      const iInnerContentLength = sComponentRemaining.length - 1;
+      const sDocumentId = sComponentRemaining.substring(
+        iOuterParensBegin + 1,
+        iInnerContentLength
+      );
+
+      // If id not just a string but in the form of ObjectId("adfadf") then
+      // create an object id instance
+      if (sDocumentId.startsWith("Object")){
+        const openQuote = sDocumentId.indexOf('"');
+        const closeQuote = sDocumentId.indexOf('"', openQuote + 1);
+        const sInnerDocumentId = sDocumentId.substring(openQuote + 1, closeQuote);
+        oComponents.documentId = new Meteor.Collection.ObjectID(sInnerDocumentId);
+
+      } else {
+        // Just a regular meteor id string
+        oComponents.documentId = sDocumentId;
+      }
     }
 
     // Return remaining components as property path

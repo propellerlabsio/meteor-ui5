@@ -205,7 +205,11 @@ sap.ui.define([
     // var that = this;
     this._oQueryHandle = oCursor.observeChanges({
       addedBefore: (id, fields, before) => {
-        const oContext = new Context(this.oModel, this.sPath + "(" + id + ")");
+        // Allow for Mongo ID's that are objects - etc ObjectId("12345")
+        const sDocumentId = id.toString();
+
+        // Create context
+        const oContext = new Context(this.oModel, this.sPath + "(" + sDocumentId + ")");
         this._aContexts.push(oContext);
         this.fireDataReceived();
         this._fireChange(ChangeReason.add);
