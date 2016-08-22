@@ -3,6 +3,9 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    eslint: {
+      target: ['src/**/*.js']
+    },
     clean: ['doc', 'dist', 'temp'],
     jsdoc: {
       doc: {
@@ -42,6 +45,7 @@ module.exports = function(grunt) {
   });
 
   // Load grunt plugin tasks from pre-installed npm packages
+  grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-jsdoc');
   grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -134,6 +138,7 @@ module.exports = function(grunt) {
 
   // Complete, combined build task
   grunt.registerTask('build', [
+    'eslint',
     'clean',
     'jsdoc',
     'babel',

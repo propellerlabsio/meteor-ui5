@@ -3,13 +3,13 @@
  * @copyright PropellerLabs.io 2016
  * @license Apache-2.0
  */
-sap.ui.define([
-    'sap/ui/model/ContextBinding',
-    'sap/ui/model/ChangeReason'
-  ],
-  function(ContextBinding, ChangeReason) {
-    "use strict";
 
+/* globals sap */
+sap.ui.define([
+  'sap/ui/model/ContextBinding',
+  'sap/ui/model/ChangeReason'
+],
+  (ContextBinding, ChangeReason) => {
     /**
      * @summary Constructor for ContextBinding
      *
@@ -17,10 +17,10 @@ sap.ui.define([
      * @description Provides a specialized context binding that can be used to
      * bind to a single document in a Meteor Mongo Collection.  It is this type
      * of ContextBinding that is used when, for example, an object header is
-     * bound to a path like "/Orders(<_id>)".
+     * bound to a path like '/Orders(<_id>)'.
      *
-     * Each instance of this class observes changes on a query handle to provide reactive updates via firing
-     * events.
+     * Each instance of this class observes changes on a query handle to provide
+     * reactive updates via firing events.
      *
      * @param {meteor-ui5.model.mongo.Model} oModel
      * @param {String} sPath
@@ -30,9 +30,9 @@ sap.ui.define([
      * @alias meteor-ui5.model.mongo.ContextBinding
      * @extends sap.ui.model.ContextBinding
      */
-    var cContextBinding = ContextBinding.extend("meteor-ui5.model.mongo.ContextBinding", {
+    const cContextBinding = ContextBinding.extend('meteor-ui5.model.mongo.ContextBinding', {
 
-      constructor: function(oModel, sPath, oContext, mParameters, oEvents) {
+      constructor(oModel, sPath, oContext, mParameters, oEvents) {
         // Call super constructor
         ContextBinding.call(this, oModel, sPath, oContext, mParameters, oEvents);
 
@@ -43,10 +43,10 @@ sap.ui.define([
         this._runQuery();
 
         // Don't know what this does but it's needed - copied from ClientModel.js
-        var that = this;
-        oModel.createBindingContext(sPath, oContext, mParameters, function(oContext) {
+        const that = this;
+        oModel.createBindingContext(sPath, oContext, mParameters, (oElementContext) => {
           that.bInitial = false;
-          that.oElementContext = oContext;
+          that.oElementContext = oElementContext;
         });
       }
     });
@@ -59,7 +59,7 @@ sap.ui.define([
      * forever.
      * @public
      */
-    cContextBinding.prototype.destroy = function() {
+    cContextBinding.prototype.destroy = () => {
       if (this._oQueryHandle) {
         this._oQueryHandle.stop();
       }
@@ -72,44 +72,47 @@ sap.ui.define([
      * @description Code copied from sap.ui.model.ClientContextBinding
      * @public
      */
-    cContextBinding.prototype.refresh = function(bForceUpdate) {
-      var that = this;
-      //recreate Context: force update
-      this.oModel.createBindingContext(this.sPath, this.oContext, this.mParameters, function(oContext) {
-        if (that.oElementContext === oContext && !bForceUpdate) {
-          that.oModel.checkUpdate(true, oContext);
-        } else {
+    cContextBinding.prototype.refresh = (bForceUpdate) => {
+      const that = this;
+      // Recreate Context: force update
+      this.oModel.createBindingContext(this.sPath, this.oContext, this.mParameters,
+        (oContext) => {
+          if (that.oElementContext === oContext && !bForceUpdate) {
+            that.oModel.checkUpdate(true, oContext);
+          } else {
+            that.oElementContext = oContext;
+            that._fireChange();
+          }
+        }, true);
+    };
+
+    /**
+     * @description Code copied from sap.ui.model.ClientContextBinding
+     * @public
+     */
+    cContextBinding.prototype.initialize = () => {
+      const that = this;
+      // Recreate Context: force update
+      this.oModel.createBindingContext(this.sPath, this.oContext, this.mParameters,
+        (oContext) => {
           that.oElementContext = oContext;
           that._fireChange();
-        }
-      }, true);
+        }, true);
     };
 
     /**
      * @description Code copied from sap.ui.model.ClientContextBinding
      * @public
      */
-    cContextBinding.prototype.initialize = function() {
-      var that = this;
-      //recreate Context: force update
-      this.oModel.createBindingContext(this.sPath, this.oContext, this.mParameters, function(oContext) {
-        that.oElementContext = oContext;
-        that._fireChange();
-      }, true);
-    };
-
-    /**
-     * @description Code copied from sap.ui.model.ClientContextBinding
-     * @public
-     */
-    cContextBinding.prototype.setContext = function(oContext) {
-      var that = this;
-      if (this.oContext != oContext) {
+    cContextBinding.prototype.setContext = (oContext) => {
+      const that = this;
+      if (this.oContext !== oContext) {
         this.oContext = oContext;
-        this.oModel.createBindingContext(this.sPath, this.oContext, this.mParameters, function(oContext) {
-          that.oElementContext = oContext;
-          that._fireChange();
-        });
+        this.oModel.createBindingContext(this.sPath, this.oContext, this.mParameters,
+          (oElementContext) => {
+            that.oElementContext = oElementContext;
+            that._fireChange();
+          });
       }
     };
 
@@ -120,7 +123,7 @@ sap.ui.define([
      * reactivity by observing changes in the query and firing events on change.
      * @private
      */
-    cContextBinding.prototype._runQuery = function() {
+    cContextBinding.prototype._runQuery = () => {
       // Stop observing changes in any existing query.  Will run forever otherwise.
       if (this._oQueryHandle) {
         this._oQueryHandle.stop();
@@ -131,21 +134,20 @@ sap.ui.define([
 
       // Create query handle so we can observe changes
       this._oQueryHandle = oCursor.observeChanges({
-        addedBefore: (id, fields, before) => {
+        addedBefore: () => {
           this.fireDataReceived();
           this._fireChange(ChangeReason.add);
         },
 
-        changed: (id, fields) => {
+        changed: () => {
           this._fireChange(ChangeReason.change);
         },
 
-        removed: (id) => {
+        removed: () => {
           this._fireChange(ChangeReason.remove);
         }
       });
-    }
+    };
 
     return cContextBinding;
-
   });

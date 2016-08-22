@@ -3,15 +3,14 @@
  * @copyright PropellerLabs.io 2016
  * @license Apache-2.0
  */
+/* globals sap */
 sap.ui.define([
   'jquery.sap.global',
   'sap/ui/model/ListBinding',
   'sap/ui/model/Context',
   'sap/ui/model/ChangeReason',
   'sap/ui/model/Filter'
-], function(jQuery, ListBinding, Context, ChangeReason, Filter) {
-  "use strict";
-
+], (jQuery, ListBinding, Context, ChangeReason, Filter) => {
   /**
    * @summary Constructor for DocumentListBinding
    *
@@ -19,7 +18,7 @@ sap.ui.define([
    * @description Provides a specialized context binding that can be used to
    * bind to several documents in a Meteor Mongo Collection.  It is this type
    * of ContextBinding that is used when, for example, an object header is
-   * bound to a path like "/Orders".  The results can be restricted via the
+   * bound to a path like '/Orders'.  The results can be restricted via the
    * aFilters parameter.
    *
    * Each instance of this class observes changes on a query handle to provide
@@ -36,10 +35,10 @@ sap.ui.define([
    * @alias meteor-ui5.model.mongo.DocumentListBinding
    * @extends sap.ui.model.ListBinding
    */
-  var cDocumentListBinding = ListBinding.extend("meteor-ui5.model.mongo.DocumentListBinding", {
+  const cDocumentListBinding = ListBinding.extend('meteor-ui5.model.mongo.DocumentListBinding', {
 
-    constructor: function(oModel, sPath, oContext, aSorters, aFilters, mParameters) {
-
+    constructor(oModel, sPath, oContext, aSorters, aFilters, mParameters) {
+      // Call super constructor
       ListBinding.call(this, oModel, sPath, oContext, aSorters, aFilters, mParameters);
 
       // Set up array for storing contexts
@@ -56,16 +55,20 @@ sap.ui.define([
    * @summary Returns an array of binding contexts for the bound target list.
    *
    * @description <strong>Note:</strong>The parent class method documentation
-   * indicates tht public usage of this method is deprecated use {@link meteor-ui5.model.mongo.DocumentListBinding.prototype.getCurrentContexts}
+   * indicates tht public usage of this method is deprecated use
+   * {@link meteor-ui5.model.mongo.DocumentListBinding.prototype.getCurrentContexts}
    * instead.
    *
-   * @param {int} [iStartIndex=0] the startIndex where to start the retrieval of contexts
-   * @param {int} [iLength=length of the list] determines how many contexts to retrieve beginning from the start index.
-   * @return {sap.ui.model.Context[]} the array of contexts for each row of the bound list
+   * @param {int} [iStartIndex=0] the startIndex where to start the retrieval of
+   * contexts
+   * @param {int} [iLength=length of the list] determines how many contexts to
+   * retrieve beginning from the start index.
+   * @return {sap.ui.model.Context[]} the array of contexts for each row of the
+   * bound list
    *
    * @protected
    */
-  cDocumentListBinding.prototype.getContexts = function(iStartIndex, iLength) {
+  cDocumentListBinding.prototype.getContexts = function getContexts(iStartIndex, iLength) {
     // TODO Optimize the interplay between this method and the observeChanges.added
     // code added to the query.  It's exponentially better than it was but is still
     // being called every time dataChange is fired so if the query results
@@ -85,7 +88,7 @@ sap.ui.define([
    * forever.
    * @public
    */
-  cDocumentListBinding.prototype.destroy = function() {
+  cDocumentListBinding.prototype.destroy = function destroy() {
     if (this._oQueryHandle) {
       this._oQueryHandle.stop();
     }
@@ -95,17 +98,22 @@ sap.ui.define([
    * @summary Filters the list according to the filter definitions
    *
    * @param {object[]} aFilters Array of filter objects
-   * @param {sap.ui.model.FilterType} sFilterType Type of the filter which should be adjusted, if it is not given, the standard behaviour applies
-   * @return {meteor-ui5.model.mongo.DocumentListBinding} returns <code>this</code> to facilitate method chaining
-   *
+   * @param {sap.ui.model.FilterType} sFilterType Type of the filter which should
+   * be adjusted, if it is not given, the standard behaviour applies
+   * @return {meteor-ui5.model.mongo.DocumentListBinding} returns
+   * <code>this</code> to facilitate method chaining
    * @public
    */
-  cDocumentListBinding.prototype.filter = function(aFilters, sFilterType) {
+  cDocumentListBinding.prototype.filter = function filter(aNewFilters) {
+    // TODO add back parameter sFilterType and test what it does. Removed to
+    // pass eslint
+
     // Replace contents of aFilters property
     this.aFilters = [];
-    if (!jQuery.isArray(aFilters) && aFilters instanceof Filter) {
-      aFilters = [aFilters];
-    } else if (!jQuery.isArray(aFilters)) {
+    let aFilters = [];
+    if (!jQuery.isArray(aNewFilters) && aNewFilters instanceof Filter) {
+      aFilters = [aNewFilters];
+    } else if (!jQuery.isArray(aNewFilters)) {
       aFilters = [];
     }
     this.aApplicationFilters = aFilters;
@@ -119,13 +127,15 @@ sap.ui.define([
   /**
    * Sorts the list according to the sorter object
    *
-   * @param {sap.ui.model.Sorter|Array} aSorters the Sorter object or an array of sorters which defines the sort order
-   * @return {meteor-ui5.model.mongo.DocumentListBinding} returns <code>this</code> to facilitate method chaining
+   * @param {sap.ui.model.Sorter|Array} aSorters the Sorter object or an array
+   * of sorters which defines the sort order
+   * @return {meteor-ui5.model.mongo.DocumentListBinding} returns <code>this</code>
+   * to facilitate method chaining
    * @public
    */
-  cDocumentListBinding.prototype.sort = function(aSorters) {
+  cDocumentListBinding.prototype.sort = function sort(aSorters) {
     // Replace contents of aSorters property
-    Array.isArray(aSorters) ? this.aSorters = aSorters : this.aSorters = [aSorters];
+    this.aSorters = Array.isArray(aSorters) ? aSorters : [aSorters];
 
     // Re-run query
     this._runQuery();
@@ -142,7 +152,7 @@ sap.ui.define([
    * @return {int} returns the number of entries in the list
    * @public
    */
-  cDocumentListBinding.prototype.getLength = function() {
+  cDocumentListBinding.prototype.getLength = function getLength() {
     return this._aContexts.length;
   };
 
@@ -156,7 +166,7 @@ sap.ui.define([
    * @return {boolean} returns whether the length is final
    * @public
    */
-  cDocumentListBinding.prototype.isLengthFinal = function() {
+  cDocumentListBinding.prototype.isLengthFinal = function isLengthFinal() {
     // TODO don't know what to do here yet.  Can't get this method
     // to trigger and in any case, the only way to calculate if queryHandle.count()
     // is final is to introduce subscriptions to the model which I've been
@@ -176,7 +186,7 @@ sap.ui.define([
    *
    * @public
    */
-  cDocumentListBinding.prototype.getDistinctValues = function(sPath) {
+  cDocumentListBinding.prototype.getDistinctValues = function getDistinctValues() {
     // TODO what's supposed to go here?
     return null;
   };
@@ -188,7 +198,7 @@ sap.ui.define([
    * reactivity by observing changes in the query and firing events on change.
    * @private
    */
-  cDocumentListBinding.prototype._runQuery = function() {
+  cDocumentListBinding.prototype._runQuery = function _runQuery() {
     // Stop observing changes in any existing query.  Will run forever otherwise.
     if (this._oQueryHandle) {
       this._oQueryHandle.stop();
@@ -199,43 +209,66 @@ sap.ui.define([
     this._fireChange(ChangeReason.remove);
 
     // Run query
-    const oCursor = this.oModel.runQuery(this.sPath, this.oContext, this.aSorters, this.aApplicationFilters);
+    const oCursor = this.oModel.runQuery(
+      this.sPath, this.oContext, this.aSorters, this.aApplicationFilters
+    );
 
     // Create query handle so we can observe changes
-    // var that = this;
     this._oQueryHandle = oCursor.observeChanges({
       addedBefore: (id, fields, before) => {
-        // Allow for Mongo ID's that are objects - etc ObjectId("12345")
-        const sDocumentId = id.toString();
-        const sPath = this.sPath + "(" + sDocumentId + ")";
-
         // Create context
-        const oContext = new Context(this.oModel, sPath);
-        this._aContexts.push(oContext);
+        const sDocumentPath = this._getDocumentPath(id);
+        const oContext = new Context(this.oModel, sDocumentPath);
+        if (before) {
+          // Insert context before existing context
+          const sBeforeDocumentPath = this._getDocumentPath(before);
+          const iBeforeIndex = this._getContextIndex(sBeforeDocumentPath);
+          this._aContexts.splice(iBeforeIndex, 0, oContext);
+        } else {
+          this._aContexts.push(oContext);
+        }
         this.fireDataReceived();
         this._fireChange(ChangeReason.add);
       },
 
-      changed: (id, fields) => {
-        //TODO performance - work out how to only update data that has changed
+      changed: () => {
+        // TODO performance - work out how to only update data that has changed
         this.oModel.refresh();
       },
 
       removed: (id) => {
         // Remove context for document
-        const sDocumentId = id.toString();
-        const sPath = this.sPath + "(" + sDocumentId + ")";
-        const iContextIndex = this._aContexts.findIndex((oContext)=>{
-            return oContext.sPath === sPath;
-        })
+        const sDocumentPath = this._getDocumentPath(id);
+        const iContextIndex = this._getContextIndex(sDocumentPath);
         this._aContexts.splice(iContextIndex, 1);
 
-        //TODO performance - work out how to only update data that has changed
+        // TODO performance - work out how to only update data that has changed
         this.oModel.refresh();
       }
     });
-  }
+  };
+
+  /**
+   * @summary Return a path for a single document given a document id
+   * @param  {string|object} sDocumentId  Id of document
+   * @return {string}                    Path of document
+   * @private
+   */
+  cDocumentListBinding.prototype._getDocumentPath = function _getDocumentPath(sDocumentId) {
+    // Allow for Mongo ID's that are objects - etc ObjectId('12345')
+    // by using toString() - will also work with regular string ids
+    return `${this.sPath}('${sDocumentId.toString()})`;
+  };
+
+  /**
+   * @summary Get index of existing context based on document path
+   * @param  {string} sDocumentPath Path of document
+   * @return {number}               Index of document in this._aContexts
+   * @private
+   */
+  cDocumentListBinding.prototype._getContextIndex = function _getContextIndex(sDocumentPath) {
+    return this._aContexts.findIndex((oContext) => oContext.sPath === sDocumentPath);
+  };
 
   return cDocumentListBinding;
-
 });
