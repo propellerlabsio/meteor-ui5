@@ -1,0 +1,19 @@
+{
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "allowImportExportEverywhere": true
+  },
+  "plugins": [
+    "meteor"
+  ],
+  "extends": [
+    "airbnb",
+    "plugin:meteor/recommended"
+  ],
+  "rules": {
+    "comma-dangle": 0,                      // Agreed with DG that trailing commas rule can be ingored
+    "no-underscore-dangle": 0,              // UI5 uses convention of _ prefix for private methods
+    "import/no-unresolved": 0,              // Meteor import resolver is all but useless for standard packages. Wasting too many hours on this
+    "import/no-extraneous-dependencies": 0  // https://github.com/meteor/guide/issues/537
+  }
+}

@@ -7,6 +7,8 @@
  * @description The Meteor UI5 package
  */
 
+/* globals Package */
+
 Package.describe({
   name: 'propellerlabsio:meteor-ui5',
   version: '0.1.0',
@@ -15,7 +17,7 @@ Package.describe({
   documentation: 'README.md'
 });
 
-Package.onUse(function(api) {
+Package.onUse((api) => {
   api.versionsFrom('1.4.0.1');
   api.use('ecmascript');
 
@@ -53,6 +55,4 @@ Package.onUse(function(api) {
     bare: true,
     isAsset: true // Allows clients to reference model by <resourcepath>.model.mongo.Model
   });
-
-
 });

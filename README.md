@@ -18,6 +18,8 @@ Please see the [Meteor Ui5 website](http://meteor-ui5.propellerlabs.io) for docu
 1. After cloning the repo, run `npm install` to install build dependencies.
 1. Run `npm run-script build` after making any changes to files in the `src/` directory. This will rebuild the `dist/` files and the documentation.  Meteor's own build tool will handle everything after that.
 
+**Note:** if you are getting errors when running the build script specifically at the eslint step, uninstall all of the eslint dependencies including eslint from npm globally.
+
 ### Project folder structure
 | Path | Purpose |
 | ---- | ------- |
