@@ -3,7 +3,6 @@
  * @copyright PropellerLabs.io 2016
  * @license Apache-2.0
  */
-
 /* globals sap */
 sap.ui.define([
   'sap/ui/model/ContextBinding',
