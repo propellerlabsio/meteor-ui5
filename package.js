@@ -1,7 +1,7 @@
 Package.describe({
   name: 'propellerlabsio:meteor-ui5',
-  version: '0.0.1',
-  summary: 'OpenUI5 in Meteor',
+  version: '0.0.2',
+  summary: 'DEPRECATED! See README.',
   git: 'https://github.com/propellerlabsio/meteor-ui5',
   documentation: 'README.md'
 });
