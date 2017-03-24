@@ -1,5 +1,5 @@
 # meteor-ui5
-**WARNING!** This package has been **deprecated**.  It is now **obsolete**.  Please see the following resources for replacement packages:
+This is the meta-package for the Meteor-UI5 project.  Please refer to the following resources for Meteor-UI5 components:
 
 | Resource | Description |
 | -------- | ----------- |
